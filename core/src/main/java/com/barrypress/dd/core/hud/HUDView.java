@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.barrypress.dd.core.character.PC;
 import javafx.scene.PerspectiveCamera;
@@ -76,9 +78,17 @@ public class HUDView {
         characterDetails.setSkin(skin);
         characterSkills.setSkin(skin);
 
-        characterDetails.add("Overiview").colspan(2);
+        Table characterInfo = new Table();
+        characterInfo.setSkin(skin);
+        characterInfo.setBackground(new SpriteDrawable(new Sprite(spriteSheet.findRegion("thor"))));
+        characterInfo.add("AC");
+        characterInfo.add("HP");
+        characterInfo.add("Speed");
+        characterInfo.add("Surge");
+
+        characterDetails.add(characterInfo).colspan(2).height(250f);
         characterDetails.row();
-        characterDetails.add("State1");
+        characterDetails.add("State1").expandY();
         characterDetails.add("State2");
 
         characterSkills.add("At Will");
@@ -119,7 +129,7 @@ public class HUDView {
 
         leftSide.add(portraits).width(width * .8f).height(height * .7f);
         leftSide.row();
-        leftSide.add(character).expandY();
+        leftSide.add(character).expandY().top().left();
 
         rightSide.add("mdetail");
         rightSide.row();

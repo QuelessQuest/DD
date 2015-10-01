@@ -37,3 +37,10 @@ blank_circle
   orig: 100, 100
   offset: 0, 0
   index: -1
+thor
+  rotate: false
+  xy: 0, 200
+  size: 268, 260
+  orig: 268, 260
+  offset: 0, 0
+  index: -1
