@@ -1,5 +1,6 @@
 package com.barrypress.dd.core.character;
 
+import com.badlogic.gdx.graphics.Color;
 import com.barrypress.dd.core.character.power.FeyStep;
 import com.barrypress.dd.core.character.power.Power;
 
@@ -16,6 +17,7 @@ public class Immeril extends PC {
         setTag("immeril");
         setRace("Eladrin");
         setRole("Wizard");
+        setColor(new Color(43/255f, 35/255f, 24/255f, 1f));
         getKnownPowers().add(new FeyStep());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

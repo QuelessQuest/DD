@@ -1,6 +1,7 @@
 package com.barrypress.dd.core.character;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.barrypress.dd.core.character.power.Power;
 
 public class Allisa extends PC {
@@ -16,6 +17,7 @@ public class Allisa extends PC {
         setTag("allisa");
         setRace("Human");
         setRole("Ranger");
+        setColor(new Color(71/255f, 85/255f, 23/255f, .5f));
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);
         addStartingPower(Power.PowerType.AT_WILL);

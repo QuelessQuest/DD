@@ -1,6 +1,7 @@
 package com.barrypress.dd.core.character;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.barrypress.dd.core.character.power.Power;
 import com.barrypress.dd.core.character.power.SneakAttack;
 
@@ -17,6 +18,7 @@ public class Kat extends PC {
         setTag("kat");
         setRace("Human");
         setRole("Rogue");
+        setColor(new Color(76/255f, 54/255f, 41/255f, 1f));
         getKnownPowers().add(new SneakAttack());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

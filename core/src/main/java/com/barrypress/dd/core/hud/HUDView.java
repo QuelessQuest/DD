@@ -3,15 +3,15 @@ package com.barrypress.dd.core.hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.barrypress.dd.core.character.PC;
 import javafx.scene.PerspectiveCamera;
@@ -22,10 +22,18 @@ public class HUDView {
 
     private AssetManager assetManager;
     private BitmapFont bitmapFont;
+    private Label labelAC;
+    private Label labelHP;
+    private Label labelSPD;
+    private Label labelSRG;
+    private Label surges;
+    private Label name;
     private PerspectiveCamera camera;
+    private Skin ddSkin;
     private Skin skin;
     private Stage stage;
     private SpriteBatch batch;
+    private Table character;
     private TextureAtlas spriteSheet;
 
     private List<PC> characters;
@@ -47,11 +55,15 @@ public class HUDView {
 
         bitmapFont = new BitmapFont();
 
-        this.skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
+        ddSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/text.json"));
 
         batch = new SpriteBatch();
         camera = new PerspectiveCamera();
         spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
+
+        NinePatch background = new NinePatch(spriteSheet.findRegion("background"), 10, 10, 10, 10);
+        skin.add("background", background);
 
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -59,37 +71,46 @@ public class HUDView {
         stage = new Stage(new StretchViewport((float) Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight()), batch);
         Gdx.input.setInputProcessor(stage);
 
+        Sprite mainGame = new Sprite(new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/maingame.png")));
+
         Table mainTable = new Table();
         mainTable.setFillParent(true);
         mainTable.setSkin(skin);
+        mainTable.setBackground(new SpriteDrawable(mainGame));
         mainTable.left().top();
 
         Table leftSide = new Table();
         Table rightSide = new Table();
         Table portraits = new Table();
-        Table character = new Table();
-        Table characterDetails = new Table();
+        Table nameTable = new Table();
+        character = new Table();
         Table characterSkills = new Table();
 
         leftSide.setSkin(skin);
         rightSide.setSkin(skin);
         portraits.setSkin(skin);
         character.setSkin(skin);
-        characterDetails.setSkin(skin);
         characterSkills.setSkin(skin);
+        nameTable.setSkin(skin);
 
+        labelAC = new Label("0", skin);
+        labelHP = new Label("0", skin);
+        labelSPD = new Label("0", skin);
+        labelSRG = new Label("0", skin);
         Table characterInfo = new Table();
-        characterInfo.setSkin(skin);
-        characterInfo.setBackground(new SpriteDrawable(new Sprite(spriteSheet.findRegion("thor"))));
-        characterInfo.add("AC");
-        characterInfo.add("HP");
-        characterInfo.add("Speed");
-        characterInfo.add("Surge");
-
-        characterDetails.add(characterInfo).colspan(2).height(250f);
-        characterDetails.row();
-        characterDetails.add("State1").expandY();
-        characterDetails.add("State2");
+        characterInfo.setSkin(ddSkin);
+        characterInfo.bottom();
+        float cWidth = width * .79f;
+        float ciWidth = cWidth * .24f * .25f;
+        characterInfo.add("AC").width(ciWidth).center();
+        characterInfo.add("HP").width(ciWidth).center();
+        characterInfo.add("Speed").width(ciWidth).center();
+        characterInfo.add("Surge").width(ciWidth).center();
+        characterInfo.row();
+        characterInfo.add(labelAC).center();
+        characterInfo.add(labelHP).center();
+        characterInfo.add(labelSPD).center();
+        characterInfo.add(labelSRG).center();
 
         characterSkills.add("At Will");
         characterSkills.add("AW1");
@@ -107,16 +128,31 @@ public class HUDView {
         characterSkills.add("I1");
         characterSkills.add("I2");
 
-        character.add(characterDetails);
-        character.add(characterSkills);
-        character.add("details");
+        name = new Label("Name", skin);
+        name.setAlignment(Align.center);
+
+        float ntWidth = cWidth * .24f;
+        float ntHeight = height * .28f;
+        nameTable.top().left();
+        nameTable.add("").width(ntWidth * .1f).height(ntHeight * .14f);
+        nameTable.add(name).width(ntWidth * .8f);
+        nameTable.add("").width(ntWidth * .1f);
+        nameTable.row();
+        nameTable.add(characterInfo).colspan(3).bottom().left().height(ntHeight * .86f);
+
+        character.add("").width(cWidth * .02f);
+        character.add(nameTable).width(cWidth * .24f).height(height * .28f).top().left();
+        character.add("").width(cWidth * .03f);
+        character.add(characterSkills).width(cWidth * .435f);
+        character.add("").width(cWidth * .035f);
+        character.add("details").top().right().width(cWidth * .24f);
 
         portraits.left().top();
         boolean flag = true;
         for (PC pc : characters) {
             pc.setPortrait(new Image(spriteSheet.findRegion(pc.getTag())));
             pc.getPortrait().setName(pc.getName());
-            pc.getPortrait().addListener(new HoverListener(pc.getPortrait()));
+            pc.getPortrait().addListener(new HoverListener(pc, name));
             if (flag) {
                 portraits.add(pc.getPortrait());
                 portraits.add(new Image(spriteSheet.findRegion("blank_circle"))).expandX().top().right();
@@ -127,29 +163,54 @@ public class HUDView {
             portraits.row();
         }
 
-        leftSide.add(portraits).width(width * .8f).height(height * .7f);
+        leftSide.add(portraits).width(width * .79f).height(height * .69f);
         leftSide.row();
-        leftSide.add(character).expandY().top().left();
+        leftSide.add(character).width(width * .79f).top().left();
 
-        rightSide.add("mdetail");
+        surges = new Label("Surges Remaining: 0", skin);
+        surges.setAlignment(Align.center);
+        float rWidth = width * .21f;
+        rightSide.add("Monster").colspan(3).height(height * .06f);
         rightSide.row();
-        rightSide.add("state");
+        rightSide.add("").width(rWidth * .13f).height(height * .23f);
+        rightSide.add("mdetail").width(rWidth * .81f).top().left();
+        rightSide.add("").width(rWidth * .06f);
         rightSide.row();
-        rightSide.add("surge");
+        rightSide.add("").colspan(3).height(height * .04f);
         rightSide.row();
-        rightSide.add("phase");
+        rightSide.add("").width(rWidth * .13f).height(height * .25f);
+        rightSide.add("state").width(rWidth * .81f).top().left();
+        rightSide.add("").width(rWidth * .04f);
         rightSide.row();
-        rightSide.add("toolbar");
+        rightSide.add("").colspan(3).height(height * .04f);
+        rightSide.row();
+        rightSide.add("").width(rWidth * .13f).height(height * .045f);
+        rightSide.add(surges).width(rWidth * .81f).height(height * .045f);
+        rightSide.add("").width(rWidth * .06f);
+        rightSide.row();
+        rightSide.add("").colspan(3).height(height * .04f);
+        rightSide.row();
+        rightSide.add("").width(rWidth * .13f).height(height * .18f);
+        rightSide.add("phase").width(rWidth * .81f).top().left();
+        rightSide.add("").width(rWidth * .06f);
+        rightSide.row();
+        rightSide.add("").colspan(3).height(height * .04f);
+        rightSide.row();
+        rightSide.add("").width(rWidth * .13f).height(height * .04f);
+        rightSide.add("toolbar").width(rWidth * .81f);
+        rightSide.add("").width(rWidth * .06f);
+        rightSide.row();
+        rightSide.add("").colspan(3).height(height * .055f);
 
-        mainTable.add(leftSide);
-        mainTable.add(rightSide).expandX();
+        mainTable.add(leftSide).top().left();
+        mainTable.add(rightSide).width(width * .21f).top().left();
 
         stage.addActor(mainTable);
     }
 
     public void render() {
 
-        Gdx.gl20.glClearColor(1.0F, 1.0F, 1.0F, 1.0F);
+        Gdx.gl20.glClearColor(47/255f, 47/255f, 47/255f, 1.0F);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 

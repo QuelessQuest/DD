@@ -1,5 +1,6 @@
 package com.barrypress.dd.core.character;
 
+import com.badlogic.gdx.graphics.Color;
 import com.barrypress.dd.core.character.power.HealingWord;
 import com.barrypress.dd.core.character.power.Power;
 
@@ -19,6 +20,7 @@ public class Thorgrim extends PC {
         setTag("thorgrim");
         setRace("Dwarf");
         setRole("Cleric");
+        setColor(new Color(143/255f, 103/255f, 33/255f, 1f));
         getKnownPowers().add(new HealingWord());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

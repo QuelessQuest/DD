@@ -1,6 +1,7 @@
 package com.barrypress.dd.core.character;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.barrypress.dd.core.character.power.Power;
 
@@ -20,6 +21,7 @@ public abstract class PC {
     private String role;
     private String tag;
 
+    private Color color;
     private Image portrait;
 
     private boolean slowed;
@@ -305,5 +307,13 @@ public abstract class PC {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
