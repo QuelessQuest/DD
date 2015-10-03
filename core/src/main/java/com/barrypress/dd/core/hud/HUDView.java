@@ -106,20 +106,20 @@ public class HUDView {
         float ciHeight = ntHeight * .86f;
 
         characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("ac").height(ciHeight * .22f).width(ntWidth * .30f);
-        characterInfo.add(labelAC).center().height(ciHeight * .25f).width(ntWidth * .60f).bottom();
+        characterInfo.add("ac").height(ciHeight * .22f).width(ntWidth * .35f);
+        characterInfo.add(labelAC).center().height(ciHeight * .25f).width(ntWidth * .55f).bottom();
         characterInfo.row();
         characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("hp").height(ciHeight * .22f).width(ntWidth * .30f);
-        characterInfo.add(labelHP).center().height(ciHeight * .22f).width(ntWidth * .60f);
+        characterInfo.add("hp").height(ciHeight * .22f).width(ntWidth * .35f);
+        characterInfo.add(labelHP).center().height(ciHeight * .22f).width(ntWidth * .55f);
         characterInfo.row();
         characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("speed").height(ciHeight * .22f).width(ntWidth * .30f);
-        characterInfo.add(labelSPD).center().height(ciHeight * .19f).width(ntWidth * .60f);
+        characterInfo.add("speed").height(ciHeight * .22f).width(ntWidth * .35f);
+        characterInfo.add(labelSPD).center().height(ciHeight * .19f).width(ntWidth * .55f);
         characterInfo.row();
         characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("surge").height(ciHeight * .22f).width(ntWidth * .30f);
-        characterInfo.add(labelSRG).center().height(ciHeight * .18f).width(ntWidth * .60f);
+        characterInfo.add("surge").height(ciHeight * .22f).width(ntWidth * .35f);
+        characterInfo.add(labelSRG).center().height(ciHeight * .18f).width(ntWidth * .55f);
         characterInfo.row();
         characterInfo.add("").height(ciHeight * .12f).colspan(3);
 
@@ -161,7 +161,7 @@ public class HUDView {
         for (PC pc : characters) {
             pc.setPortrait(new Image(spriteSheet.findRegion(pc.getTag())));
             pc.getPortrait().setName(pc.getName());
-            pc.getPortrait().addListener(new HoverListener(pc, name));
+            pc.getPortrait().addListener(new HoverListener(pc, name, labelAC, labelHP, labelSPD, labelSRG));
             if (flag) {
                 portraits.add(pc.getPortrait());
                 portraits.add(new Image(spriteSheet.findRegion("blank_circle"))).expandX().top().right();
