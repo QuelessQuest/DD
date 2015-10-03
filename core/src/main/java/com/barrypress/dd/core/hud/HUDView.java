@@ -93,24 +93,35 @@ public class HUDView {
         characterSkills.setSkin(skin);
         nameTable.setSkin(skin);
 
-        labelAC = new Label("0", skin);
-        labelHP = new Label("0", skin);
-        labelSPD = new Label("0", skin);
-        labelSRG = new Label("0", skin);
+        labelAC = new Label("0", ddSkin);
+        labelHP = new Label("0", ddSkin);
+        labelSPD = new Label("0", ddSkin);
+        labelSRG = new Label("0", ddSkin);
         Table characterInfo = new Table();
         characterInfo.setSkin(ddSkin);
-        characterInfo.bottom();
+        characterInfo.top().left();
         float cWidth = width * .79f;
-        float ciWidth = cWidth * .24f * .25f;
-        characterInfo.add("AC").width(ciWidth).center();
-        characterInfo.add("HP").width(ciWidth).center();
-        characterInfo.add("Speed").width(ciWidth).center();
-        characterInfo.add("Surge").width(ciWidth).center();
+        float ntWidth = cWidth * .24f;
+        float ntHeight = height * .28f;
+        float ciHeight = ntHeight * .86f;
+
+        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
+        characterInfo.add("ac").height(ciHeight * .22f).width(ntWidth * .30f);
+        characterInfo.add(labelAC).center().height(ciHeight * .25f).width(ntWidth * .60f).bottom();
         characterInfo.row();
-        characterInfo.add(labelAC).center();
-        characterInfo.add(labelHP).center();
-        characterInfo.add(labelSPD).center();
-        characterInfo.add(labelSRG).center();
+        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
+        characterInfo.add("hp").height(ciHeight * .22f).width(ntWidth * .30f);
+        characterInfo.add(labelHP).center().height(ciHeight * .22f).width(ntWidth * .60f);
+        characterInfo.row();
+        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
+        characterInfo.add("speed").height(ciHeight * .22f).width(ntWidth * .30f);
+        characterInfo.add(labelSPD).center().height(ciHeight * .19f).width(ntWidth * .60f);
+        characterInfo.row();
+        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
+        characterInfo.add("surge").height(ciHeight * .22f).width(ntWidth * .30f);
+        characterInfo.add(labelSRG).center().height(ciHeight * .18f).width(ntWidth * .60f);
+        characterInfo.row();
+        characterInfo.add("").height(ciHeight * .12f).colspan(3);
 
         characterSkills.add("At Will");
         characterSkills.add("AW1");
@@ -131,14 +142,12 @@ public class HUDView {
         name = new Label("Name", skin);
         name.setAlignment(Align.center);
 
-        float ntWidth = cWidth * .24f;
-        float ntHeight = height * .28f;
         nameTable.top().left();
         nameTable.add("").width(ntWidth * .1f).height(ntHeight * .14f);
         nameTable.add(name).width(ntWidth * .8f);
         nameTable.add("").width(ntWidth * .1f);
         nameTable.row();
-        nameTable.add(characterInfo).colspan(3).bottom().left().height(ntHeight * .86f);
+        nameTable.add(characterInfo).colspan(3).height(ntHeight * .86f);
 
         character.add("").width(cWidth * .02f);
         character.add(nameTable).width(cWidth * .24f).height(height * .28f).top().left();
@@ -167,7 +176,7 @@ public class HUDView {
         leftSide.row();
         leftSide.add(character).width(width * .79f).top().left();
 
-        surges = new Label("Surges Remaining: 0", skin);
+        surges = new Label("Surges Remaining:  0", skin);
         surges.setAlignment(Align.center);
         float rWidth = width * .21f;
         rightSide.add("Monster").colspan(3).height(height * .06f);
@@ -217,7 +226,7 @@ public class HUDView {
         batch.begin();
         bitmapFont.draw(this.batch, "FPS:" + Gdx.graphics.getFramesPerSecond(), 20.0F, 20.0F);
         batch.end();
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
         stage.act();
         stage.draw();
     }
