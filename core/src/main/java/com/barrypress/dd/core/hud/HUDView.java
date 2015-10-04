@@ -69,7 +69,6 @@ public class HUDView {
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         stage = new Stage(new StretchViewport((float) Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight()), batch);
-        Gdx.input.setInputProcessor(stage);
 
         Sprite mainGame = new Sprite(new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/maingame.png")));
 
@@ -219,16 +218,16 @@ public class HUDView {
 
     public void render() {
 
-        Gdx.gl20.glClearColor(47/255f, 47/255f, 47/255f, 1.0F);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl20.glClearColor(47/255f, 47/255f, 47/255f, 0F);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        batch.begin();
-        bitmapFont.draw(this.batch, "FPS:" + Gdx.graphics.getFramesPerSecond(), 20.0F, 20.0F);
-        batch.end();
+        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         //stage.setDebugAll(true);
         stage.act();
         stage.draw();
     }
+
+    public Stage getStage() { return stage; }
 
 }

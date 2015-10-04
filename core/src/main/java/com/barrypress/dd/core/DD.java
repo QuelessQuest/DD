@@ -1,6 +1,9 @@
 package com.barrypress.dd.core;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
+import com.barrypress.dd.core.board.BoardView;
 import com.barrypress.dd.core.character.*;
 import com.barrypress.dd.core.hud.HUDView;
 
@@ -9,6 +12,7 @@ import java.util.List;
 
 public class DD implements ApplicationListener {
 
+    private BoardView boardView;
 	private HUDView hudView;
     private List<PC> characters;
 
@@ -26,9 +30,18 @@ public class DD implements ApplicationListener {
         characters.add(immeril);
         characters.add(kat);
 
+        boardView = new BoardView();
+        boardView.init();
+
         hudView = new HUDView(characters);
         hudView.init();
-	}
+
+        InputMultiplexer inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(hudView.getStage());
+        inputMultiplexer.addProcessor(boardView.getStage());
+
+        Gdx.input.setInputProcessor(inputMultiplexer);
+    }
 
 	@Override
 	public void resize (int width, int height) {
@@ -36,6 +49,8 @@ public class DD implements ApplicationListener {
 
 	@Override
 	public void render () {
+
+        boardView.render();
         hudView.render();
 	}
 

@@ -1,0 +1,46 @@
+{
+  "tiles": [
+    {
+      "index": "1",
+      "type": [
+        "WALL",
+        "WALL",
+        "WALL",
+        "WALL",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "WALL",
+        "WALL",
+        "WALL",
+        "WALL"
+      ]
+    },
+    {
+      "index": "2",
+      "type": [
+        "WALL",
+        "WALL",
+        "WALL",
+        "WALL",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "WALL",
+        "FLOOR",
+        "FLOOR",
+        "FLOOR",
+        "WALL",
+        "WALL",
+        "WALL",
+        "WALL"
+      ]
+    }
+  ]
+}
