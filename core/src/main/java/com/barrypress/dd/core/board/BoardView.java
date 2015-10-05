@@ -44,8 +44,8 @@ public class BoardView {
 
         map = new TiledMap();
         MapLayers layers = map.getLayers();
+        layers.add(tiles.create(2, 0, 4, BoardTile.ROTATION.ROTATE_0));
         layers.add(tiles.create(1, 0, 0, BoardTile.ROTATION.ROTATE_0));
-        layers.add(tiles.create(2, 0, 4, BoardTile.ROTATION.ROTATE_270));
 
         renderer = new IsometricTiledMapRenderer(map);
 

@@ -3,7 +3,6 @@ package com.barrypress.dd.core.board;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.google.gson.Gson;
@@ -35,14 +34,14 @@ public class BoardTile {
 
         }
 
-        tiles = new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/board/assets/iso1.png"));
+        tiles = new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/board/assets/iso2.png"));
         cells = new HashMap<>();
         splitTiles = TextureRegion.split(tiles, 64, 64);
         cells.put(TileType.FLOOR, new TiledMapTileLayer.Cell());
         cells.put(TileType.WALL, new TiledMapTileLayer.Cell());
 
-        cells.get(TileType.FLOOR).setTile(new StaticTiledMapTile(splitTiles[0][3]));
-        cells.get(TileType.WALL).setTile(new StaticTiledMapTile(splitTiles[5][0]));
+        cells.get(TileType.FLOOR).setTile(new StaticTiledMapTile(splitTiles[0][0]));
+        cells.get(TileType.WALL).setTile(new StaticTiledMapTile(splitTiles[0][1]));
     }
 
     public TiledMapTileLayer create(int tile, int x, int y, ROTATION rotation) {
@@ -50,22 +49,22 @@ public class BoardTile {
         TiledMapTileLayer layer = new TiledMapTileLayer(8, 8, 64, 32);
         List<TileType> types = rotate(rotation, tileData.getTypes(tile));
 
-        layer.setCell(0 + x, 0 + y, cells.get(types.get(0)));
-        layer.setCell(0 + x, 1 + y, cells.get(types.get(1)));
-        layer.setCell(0 + x, 2 + y, cells.get(types.get(2)));
-        layer.setCell(0 + x, 3 + y, cells.get(types.get(3)));
+        layer.setCell(x, y, cells.get(types.get(0)));
+        layer.setCell(x, 1 + y, cells.get(types.get(1)));
+        layer.setCell(x, 2 + y, cells.get(types.get(2)));
+        layer.setCell(x, 3 + y, cells.get(types.get(3)));
 
-        layer.setCell(1 + x, 0 + y, cells.get(types.get(4)));
+        layer.setCell(1 + x, y, cells.get(types.get(4)));
         layer.setCell(1 + x, 1 + y, cells.get(types.get(5)));
         layer.setCell(1 + x, 2 + y, cells.get(types.get(6)));
         layer.setCell(1 + x, 3 + y, cells.get(types.get(7)));
 
-        layer.setCell(2 + x, 0 + y, cells.get(types.get(8)));
+        layer.setCell(2 + x, y, cells.get(types.get(8)));
         layer.setCell(2 + x, 1 + y, cells.get(types.get(9)));
         layer.setCell(2 + x, 2 + y, cells.get(types.get(10)));
         layer.setCell(2 + x, 3 + y, cells.get(types.get(11)));
 
-        layer.setCell(3 + x, 0 + y, cells.get(types.get(12)));
+        layer.setCell(3 + x, y, cells.get(types.get(12)));
         layer.setCell(3 + x, 1 + y, cells.get(types.get(13)));
         layer.setCell(3 + x, 2 + y, cells.get(types.get(14)));
         layer.setCell(3 + x, 3 + y, cells.get(types.get(15)));
