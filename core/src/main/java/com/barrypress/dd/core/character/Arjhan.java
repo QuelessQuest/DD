@@ -1,13 +1,17 @@
 package com.barrypress.dd.core.character;
 
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.barrypress.dd.core.character.power.DragonsBreath;
 import com.barrypress.dd.core.character.power.Power;
 
 public class Arjhan extends PC {
 
-    public Arjhan() {
-        init();
+    public Arjhan(TextureAtlas spriteSheet, Skin skin) {
+        init(skin);
         setAc(17);
         setHp(10);
         setMaxHp(10);
@@ -16,6 +20,7 @@ public class Arjhan extends PC {
         setName("Arjhan");
         setRace("Dragonborn");
         setRole("Fighter");
+        updateTable(new Sprite(spriteSheet.findRegion(getTag())));
         getKnownPowers().add(new DragonsBreath());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

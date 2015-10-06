@@ -1,0 +1,11 @@
+powers.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+healing_word
+  rotate: false
+  xy: 160, 0
+  size: 40, 40
+  orig: 40, 40
+  offset: 0, 0
+  index: -1

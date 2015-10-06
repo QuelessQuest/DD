@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class BoardTile {
 
-    public enum TileType { FLOOR, WALL };
+    public enum TileType { FLOOR, WALL, PORTAL };
     public enum ROTATION { ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270 };
 
     private Texture tiles;
@@ -39,14 +39,17 @@ public class BoardTile {
         splitTiles = TextureRegion.split(tiles, 64, 64);
         cells.put(TileType.FLOOR, new TiledMapTileLayer.Cell());
         cells.put(TileType.WALL, new TiledMapTileLayer.Cell());
+        cells.put(TileType.PORTAL, new TiledMapTileLayer.Cell());
 
         cells.get(TileType.FLOOR).setTile(new StaticTiledMapTile(splitTiles[0][0]));
         cells.get(TileType.WALL).setTile(new StaticTiledMapTile(splitTiles[0][1]));
+        cells.get(TileType.PORTAL).setTile(new StaticTiledMapTile(splitTiles[1][0]));
+
     }
 
     public TiledMapTileLayer create(int tile, int x, int y, ROTATION rotation) {
 
-        TiledMapTileLayer layer = new TiledMapTileLayer(8, 8, 64, 32);
+        TiledMapTileLayer layer = new TiledMapTileLayer(100, 100, 64, 32);
         List<TileType> types = rotate(rotation, tileData.getTypes(tile));
 
         layer.setCell(x, y, cells.get(types.get(0)));

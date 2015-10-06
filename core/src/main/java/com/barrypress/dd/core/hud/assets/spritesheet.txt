@@ -44,3 +44,17 @@ background
   orig: 100, 100
   offset: 0, 0
   index: -1
+power
+  rotate: false
+  xy: 113, 106
+  size: 82, 34
+  orig: 82, 34
+  offset: 0, 0
+  index: -1
+m_thorgrim
+  rotate: false
+  xy: 2, 303
+  size: 57, 332
+  orig: 57, 332
+  offset: 0, 0
+  index: -1

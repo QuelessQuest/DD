@@ -2,8 +2,15 @@ package com.barrypress.dd.core.character;
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.barrypress.dd.core.character.power.Power;
+import com.barrypress.dd.core.hud.HoverListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +29,12 @@ public abstract class PC {
     private String tag;
 
     private Color color;
+    private HoverListener listener;
     private Image portrait;
+    private Label hpLabel;
+    private Label acLabel;
+    private Sprite sprite;
+    private Table table;
 
     private boolean slowed;
     private boolean immobilized;
@@ -38,13 +50,19 @@ public abstract class PC {
     public void PC() {
     }
 
-    public void init() {
+    public void init(Skin skin) {
         utilityPowers = new ArrayList<>();
         dailyPowers = new ArrayList<>();
         atWillPowers = new ArrayList<>();
         knownPowers = new ArrayList<>();
         buffs = new ArrayList<>();
         startingPowerTypes = new ArrayList<>();
+        table = new Table();
+        table.setSkin(skin);
+        hpLabel = new Label("0", skin);
+        hpLabel.setAlignment(Align.center);
+        acLabel = new Label("0", skin);
+        acLabel.setAlignment(Align.center);
         slowed = false;
         immobilized = false;
         attacked = false;
@@ -55,6 +73,16 @@ public abstract class PC {
     public abstract void levelUp();
     public abstract Buff tileBuff();
     public abstract void startExplorationPhase();
+
+    protected void updateTable(Sprite me) {
+        getTable().background(new SpriteDrawable(me));
+        getTable().add("").colspan(3).height(55f).width(100f);
+        getTable().row();
+        getTable().bottom().left();
+        getTable().add(getAcLabel()).width(40f).height(45f).top().left();
+        getTable().add("").width(10f);
+        getTable().add(getHpLabel()).width(50f).height(45f).top().left();
+    }
 
     public void endHeroPhase() {
         slowed = false;
@@ -138,6 +166,7 @@ public abstract class PC {
 
     public void setAc(Integer ac) {
         this.ac = ac;
+        acLabel.setText(ac.toString());
     }
 
     public Integer getHp() {
@@ -157,6 +186,7 @@ public abstract class PC {
         if (this.hp.compareTo(maxHp) > 0) {
             this.hp = maxHp;
         }
+        hpLabel.setText(hp.toString());
     }
 
     public Integer getSpeed() {
@@ -315,5 +345,45 @@ public abstract class PC {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(Table table) {
+        this.table = table;
+    }
+
+    public Label getHpLabel() {
+        return hpLabel;
+    }
+
+    public void setHpLabel(Label hpLabel) {
+        this.hpLabel = hpLabel;
+    }
+
+    public Label getAcLabel() {
+        return acLabel;
+    }
+
+    public void setAcLabel(Label acLabel) {
+        this.acLabel = acLabel;
+    }
+
+    public HoverListener getListener() {
+        return listener;
+    }
+
+    public void setListener(HoverListener listener) {
+        this.listener = listener;
+    }
+
+    public Sprite getSprite() {
+        return sprite;
+    }
+
+    public void setSprite(Sprite sprite) {
+        this.sprite = sprite;
     }
 }

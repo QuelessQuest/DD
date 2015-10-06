@@ -11,6 +11,7 @@ public abstract class Power {
     private PowerType powerType;
     private boolean used;
     private String name;
+    private String tag;
     private String description;
     private Constants.Phase phase;
     private Constants.Role role;
@@ -67,5 +68,13 @@ public abstract class Power {
 
     public void setRole(Constants.Role role) {
         this.role = role;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

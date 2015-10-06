@@ -8,6 +8,7 @@ public class HealingWord extends Power {
         super();
         setPowerType(PowerType.UTILITY);
         setName("Healing Word");
+        setTag("healing_word");
     }
 
     public void activate(PC pc) {

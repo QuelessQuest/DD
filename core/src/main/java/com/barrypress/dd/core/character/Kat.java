@@ -2,13 +2,17 @@ package com.barrypress.dd.core.character;
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.barrypress.dd.core.character.power.Power;
 import com.barrypress.dd.core.character.power.SneakAttack;
 
 public class Kat extends PC {
 
-    public Kat() {
-        init();
+    public Kat(TextureAtlas spriteSheet, Skin skin) {
+        init(skin);
         setAc(14);
         setMaxHp(8);
         setHp(8);
@@ -19,6 +23,7 @@ public class Kat extends PC {
         setRace("Human");
         setRole("Rogue");
         setColor(new Color(76/255f, 54/255f, 41/255f, 1f));
+        updateTable(new Sprite(spriteSheet.findRegion(getTag())));
         getKnownPowers().add(new SneakAttack());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

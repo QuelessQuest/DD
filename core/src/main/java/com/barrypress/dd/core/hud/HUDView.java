@@ -38,8 +38,11 @@ public class HUDView {
 
     private List<PC> characters;
 
-    public HUDView(List<PC> characters) {
+    public HUDView(List<PC> characters, AssetManager assetManager, TextureAtlas spriteSheet, Skin skin) {
+        this.assetManager = assetManager;
         this.characters = characters;
+        this.skin = skin;
+        this.spriteSheet = spriteSheet;
     }
 
     public void init() {
@@ -49,18 +52,12 @@ public class HUDView {
         float height = (float) Gdx.graphics.getHeight();
         float width  = (float) Gdx.graphics.getWidth();
 
-        assetManager = new AssetManager();
-        assetManager.load("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt", TextureAtlas.class);
-        assetManager.finishLoading();
-
         bitmapFont = new BitmapFont();
 
-        skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
         ddSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/text.json"));
 
         batch = new SpriteBatch();
         camera = new PerspectiveCamera();
-        spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
 
         NinePatch background = new NinePatch(spriteSheet.findRegion("background"), 10, 10, 10, 10);
         skin.add("background", background);
@@ -123,7 +120,7 @@ public class HUDView {
         characterInfo.add("").height(ciHeight * .12f).colspan(3);
 
         characterSkills.add("At Will");
-        characterSkills.add("AW1");
+        characterSkills.add(new Image(spriteSheet.findRegion("power")));
         characterSkills.add("AW2");
         characterSkills.row();
         characterSkills.add("Daily");
@@ -158,16 +155,14 @@ public class HUDView {
         portraits.left().top();
         boolean flag = true;
         for (PC pc : characters) {
-            pc.setPortrait(new Image(spriteSheet.findRegion(pc.getTag())));
-            pc.getPortrait().setName(pc.getName());
-            pc.getPortrait().addListener(new HoverListener(pc, name, labelAC, labelHP, labelSPD, labelSRG));
             if (flag) {
-                portraits.add(pc.getPortrait());
+                portraits.add(pc.getTable()).bottom().left();
                 portraits.add(new Image(spriteSheet.findRegion("blank_circle"))).expandX().top().right();
                 flag = false;
             } else {
-                portraits.add(pc.getPortrait()).colspan(2).top().left();
+                portraits.add(pc.getTable()).colspan(2).bottom().left();
             }
+            pc.getTable().addListener(new HoverListener(pc, name, labelAC, labelHP, labelSPD, labelSRG));
             portraits.row();
         }
 

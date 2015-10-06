@@ -1,13 +1,17 @@
 package com.barrypress.dd.core.character;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.barrypress.dd.core.character.power.FeyStep;
 import com.barrypress.dd.core.character.power.Power;
 
 public class Immeril extends PC {
 
-    public Immeril() {
-        init();
+    public Immeril(TextureAtlas spriteSheet, Skin skin) {
+        init(skin);
         setAc(14);
         setMaxHp(6);
         setHp(6);
@@ -18,6 +22,7 @@ public class Immeril extends PC {
         setRace("Eladrin");
         setRole("Wizard");
         setColor(new Color(43/255f, 35/255f, 24/255f, 1f));
+        updateTable(new Sprite(spriteSheet.findRegion(getTag())));
         getKnownPowers().add(new FeyStep());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

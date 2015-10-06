@@ -2,12 +2,16 @@ package com.barrypress.dd.core.character;
 
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.barrypress.dd.core.character.power.Power;
 
 public class Allisa extends PC {
 
-    public Allisa() {
-        init();
+    public Allisa(TextureAtlas spriteSheet, Skin skin) {
+        init(skin);
         setAc(16);
         setMaxHp(10);
         setHp(10);
@@ -18,6 +22,7 @@ public class Allisa extends PC {
         setRace("Human");
         setRole("Ranger");
         setColor(new Color(71/255f, 85/255f, 23/255f, .5f));
+        updateTable(new Sprite(spriteSheet.findRegion(getTag())));
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);
         addStartingPower(Power.PowerType.AT_WILL);
