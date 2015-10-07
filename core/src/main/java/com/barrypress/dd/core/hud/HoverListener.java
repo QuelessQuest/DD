@@ -31,5 +31,11 @@ public class HoverListener extends ClickListener {
         hp.setText(pc.getHp().toString());
         spd.setText(pc.getSpeed().toString());
         srg.setText(pc.getSurge().toString());
+        pc.setHighlighted(true);
+    }
+
+    @Override
+    public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+        pc.setHighlighted(false);
     }
 }

@@ -11,19 +11,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapImageLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
+import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.barrypress.dd.core.character.PC;
+import com.barrypress.dd.core.utility.DDIsometricTiledMapRenderer;
+import net.dermetfan.gdx.maps.MapUtils;
 
 import java.util.List;
 
@@ -32,12 +34,10 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
     private float viewHeight;
     private float viewWidth;
 
+    private BoardTile tiles;
     private TiledMap map;
     private IsometricTiledMapRenderer renderer;
-    private SpriteBatch batch;
     private TextureAtlas spriteSheet;
-    private Matrix4 isoTransform;
-    private Matrix4 invIsoTransform;
     private OrthographicCamera camera;
 
     private List<PC> characters;
@@ -52,27 +52,21 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         viewHeight = (float) Gdx.graphics.getHeight() * .69f;
         viewWidth = (float) Gdx.graphics.getWidth() * .79f;
 
-        batch = new SpriteBatch();
-
-        isoTransform = new Matrix4();
-        isoTransform.idt();
-        isoTransform.translate(0.0f, 0.25f, 0.0f);
-        isoTransform.scale((float)(Math.sqrt(2.0) / 2.0), (float)(Math.sqrt(2.0) / 4.0), 1.0f);
-        isoTransform.rotate(0.0f, 0.0f, 1.0f, -45.0f);
-
-        invIsoTransform = new Matrix4(isoTransform);
-        invIsoTransform.inv();
-
-        //stage = new Stage(new ScreenViewport(), batch);
-
-        BoardTile tiles = new BoardTile();
+        tiles = new BoardTile();
 
         map = new TiledMap();
         MapLayers layers = map.getLayers();
-        layers.add(tiles.create(2, 0, 4, BoardTile.ROTATION.ROTATE_0));
-        layers.add(tiles.create(1, 0, 0, BoardTile.ROTATION.ROTATE_0));
 
-        renderer = new IsometricTiledMapRenderer(map, batch);
+        TiledMapTileLayer layer = new TiledMapTileLayer(100, 100, 64, 32);
+
+        layer.setName("tiles");
+        layers.add(tiles.createStartTile(layer));
+        tiles.createTile((TiledMapTileLayer) layers.get("tiles"), 1, 0, 8, BoardTile.ROTATION.ROTATE_0);
+        tiles.createTile((TiledMapTileLayer) layers.get("tiles"), 2, 0, 12, BoardTile.ROTATION.ROTATE_0);
+
+        characters.get(0).getSprite().setPosition(32f, 16f);
+
+        renderer = new IsometricTiledMapRenderer(map);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, viewWidth, viewHeight);
@@ -80,16 +74,21 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
     }
 
     public void render() {
-        Gdx.gl20.glClearColor(47/255f, 47/255f, 47/255f, 1.0F);
+        camera.update();
+
+        Gdx.gl20.glClearColor(47 / 255f, 47 / 255f, 47 / 255f, 1.0F);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, Math.round(Gdx.graphics.getHeight() * .34f), Math.round(viewWidth), Math.round(viewHeight));
 
-        camera.update();
         renderer.setView(camera);
         renderer.render();
         renderer.getBatch().setProjectionMatrix(camera.combined);
         renderer.getBatch().begin();
-        characters.get(0).getSprite().draw(renderer.getBatch());
+        if (characters.get(0).getHighlighted()) {
+            characters.get(0).getHighlightSprite().draw(renderer.getBatch());
+        } else {
+            characters.get(0).getSprite().draw(renderer.getBatch());
+        }
         renderer.getBatch().end();
     }
 
@@ -111,10 +110,26 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
         Vector3 clickCoordinates = new Vector3(screenX, screenY, 0);
-        Vector3 position = camera.unproject(clickCoordinates);
-        position.mul(isoTransform);
-        Vector3 newPosition = camera.project(position);
-        //characters.get(0).getSprite().setPosition(clickCoordinates.x, clickCoordinates.y);
+        Vector3 position = camera.unproject(clickCoordinates, 0, Math.round(Gdx.graphics.getHeight() * .34f), Math.round(viewWidth), Math.round(viewHeight));
+        Vector3 isoSpot = MapUtils.toIsometricGridPoint(position, 64f, 32f);
+
+        int x = (int) isoSpot.x;
+        int y = (int) isoSpot.y;
+
+        float x1 = (32 * x) + (32 * y);
+        float y1 = (16 * y) - (16 * x);
+
+        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("tiles");
+        if (layer.getCell(x, y) != null) {
+            if (layer.getCell(x, y).getTile() != null) {
+                Boolean wall = (Boolean) layer.getCell(x, y).getTile().getProperties().get("target");
+
+                if (wall != null && !wall) {
+                    characters.get(0).getSprite().setPosition(x1, y1);
+                    characters.get(0).getHighlightSprite().setPosition(x1, y1);
+                }
+            }
+        }
         return true;
     }
 
@@ -135,20 +150,19 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        if(keycode == Input.Keys.A)
-            camera.translate(-32,0);
-        if(keycode == Input.Keys.D)
-            camera.translate(32,0);
-        if(keycode == Input.Keys.W)
-            camera.translate(0,-32);
-        if(keycode == Input.Keys.S)
-            camera.translate(0,32);
+        if (keycode == Input.Keys.A)
+           camera.translate(-32, 0);
+        if (keycode == Input.Keys.D)
+           camera.translate(32, 0);
+        if (keycode == Input.Keys.W)
+           camera.translate(0, -32);
+        if (keycode == Input.Keys.S)
+           camera.translate(0, 32);
         return false;
     }
 
     @Override
     public boolean keyTyped(char character) {
-
         return false;
     }
 

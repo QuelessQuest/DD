@@ -53,8 +53,22 @@ power
   index: -1
 m_thorgrim
   rotate: false
-  xy: 2, 303
-  size: 57, 332
-  orig: 57, 332
+  xy: 2, 310
+  size: 67, 80
+  orig: 67, 80
   offset: 0, 0
   index: -1
+g_thorgrim
+    rotate: false
+    xy: 70, 310
+    size: 67, 80
+    orig: 67, 80
+    offset: 0, 0
+    index: -1
+ m_immeril
+   rotate: false
+   xy: 15, 400
+   size: 82, 113
+   orig: 82, 113
+   offset: 0, 0
+   index: -1

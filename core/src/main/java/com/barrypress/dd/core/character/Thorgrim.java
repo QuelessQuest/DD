@@ -3,6 +3,7 @@ package com.barrypress.dd.core.character;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.barrypress.dd.core.character.power.HealingWord;
@@ -27,6 +28,7 @@ public class Thorgrim extends PC {
         setColor(new Color(143/255f, 103/255f, 33/255f, 1f));
         updateTable(new Sprite(spriteSheet.findRegion(getTag())));
         setSprite(new Sprite(spriteSheet.findRegion("m_" + getTag())));
+        setHighlightSprite(new Sprite(spriteSheet.findRegion("g_" + getTag())));
         getKnownPowers().add(new HealingWord());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

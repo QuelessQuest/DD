@@ -3,6 +3,7 @@ package com.barrypress.dd.core.character;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -34,11 +35,14 @@ public abstract class PC {
     private Label hpLabel;
     private Label acLabel;
     private Sprite sprite;
+    private Sprite highlightSprite;
     private Table table;
+    private TextureMapObject mapObject;
 
     private boolean slowed;
     private boolean immobilized;
     private boolean attacked;
+    private boolean highlighted;
 
     private List<Power> utilityPowers;
     private List<Power> dailyPowers;
@@ -66,6 +70,7 @@ public abstract class PC {
         slowed = false;
         immobilized = false;
         attacked = false;
+        highlighted = false;
         level = 1;
     }
 
@@ -385,5 +390,31 @@ public abstract class PC {
 
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
+    }
+
+    public TextureMapObject getMapObject() {
+        return mapObject;
+    }
+
+    public void setMapObject(TextureMapObject mapObject) {
+        this.mapObject = mapObject;
+    }
+
+    public boolean isHighlighted() {
+        return highlighted;
+    }
+
+    public void setHighlighted(boolean highlighted) {
+        this.highlighted = highlighted;
+    }
+
+    public boolean getHighlighted() { return highlighted; }
+
+    public Sprite getHighlightSprite() {
+        return highlightSprite;
+    }
+
+    public void setHighlightSprite(Sprite highlightSprite) {
+        this.highlightSprite = highlightSprite;
     }
 }
