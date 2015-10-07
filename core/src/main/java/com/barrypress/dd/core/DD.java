@@ -38,8 +38,8 @@ public class DD implements ApplicationListener {
         Kat kat = new Kat(spriteSheet, skin);
 
         characters.add(thorgrim);
-        characters.add(allisa);
         characters.add(immeril);
+        characters.add(allisa);
         characters.add(kat);
 
         boardView = new BoardView(characters, spriteSheet);

@@ -65,10 +65,10 @@ g_thorgrim
     orig: 67, 80
     offset: 0, 0
     index: -1
- m_immeril
+m_immeril
    rotate: false
    xy: 15, 400
-   size: 82, 113
-   orig: 82, 113
+   size: 82, 108
+   orig: 82, 108
    offset: 0, 0
    index: -1

@@ -28,6 +28,8 @@ public abstract class PC {
     private String race;
     private String role;
     private String tag;
+    private float offsetX;
+    private float offsetY;
 
     private Color color;
     private HoverListener listener;
@@ -55,6 +57,8 @@ public abstract class PC {
     }
 
     public void init(Skin skin) {
+        offsetX = 0f;
+        offsetY = 0f;
         utilityPowers = new ArrayList<>();
         dailyPowers = new ArrayList<>();
         atWillPowers = new ArrayList<>();
@@ -416,5 +420,21 @@ public abstract class PC {
 
     public void setHighlightSprite(Sprite highlightSprite) {
         this.highlightSprite = highlightSprite;
+    }
+
+    public float getOffsetX() {
+        return offsetX;
+    }
+
+    public void setOffsetX(float offsetX) {
+        this.offsetX = offsetX;
+    }
+
+    public float getOffsetY() {
+        return offsetY;
+    }
+
+    public void setOffsetY(float offsetY) {
+        this.offsetY = offsetY;
     }
 }

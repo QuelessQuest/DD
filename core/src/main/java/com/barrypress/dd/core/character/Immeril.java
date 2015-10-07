@@ -24,6 +24,7 @@ public class Immeril extends PC {
         setColor(new Color(43/255f, 35/255f, 24/255f, 1f));
         updateTable(new Sprite(spriteSheet.findRegion(getTag())));
         setSprite(new Sprite(spriteSheet.findRegion("m_" + getTag())));
+        setOffsetX(-3f);
         getKnownPowers().add(new FeyStep());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);

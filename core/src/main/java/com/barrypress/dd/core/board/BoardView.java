@@ -65,6 +65,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         tiles.createTile((TiledMapTileLayer) layers.get("tiles"), 2, 0, 12, BoardTile.ROTATION.ROTATE_0);
 
         characters.get(0).getSprite().setPosition(32f, 16f);
+        characters.get(1).getSprite().setPosition(64f, 32f);
 
         renderer = new IsometricTiledMapRenderer(map);
 
@@ -89,6 +90,8 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         } else {
             characters.get(0).getSprite().draw(renderer.getBatch());
         }
+        characters.get(1).getSprite().draw(renderer.getBatch());
+
         renderer.getBatch().end();
     }
 
@@ -125,8 +128,8 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
                 Boolean wall = (Boolean) layer.getCell(x, y).getTile().getProperties().get("target");
 
                 if (wall != null && !wall) {
-                    characters.get(0).getSprite().setPosition(x1, y1);
-                    characters.get(0).getHighlightSprite().setPosition(x1, y1);
+                    characters.get(1).getSprite().setPosition(x1 + characters.get(1).getOffsetX(), y1 + characters.get(1).getOffsetY());
+                    //characters.get(0).getHighlightSprite().setPosition(x1, y1);
                 }
             }
         }
