@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.barrypress.dd.core.character.power.Power;
-import com.barrypress.dd.core.hud.HoverListener;
+import com.barrypress.dd.core.hud.PCListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +24,8 @@ public abstract class PC {
     private Integer speed;
     private Integer surge;
     private Integer level;
+    private Integer cellX;
+    private Integer cellY;
     private String name;
     private String race;
     private String role;
@@ -32,7 +34,7 @@ public abstract class PC {
     private float offsetY;
 
     private Color color;
-    private HoverListener listener;
+    private PCListener listener;
     private Image portrait;
     private Label hpLabel;
     private Label acLabel;
@@ -380,11 +382,11 @@ public abstract class PC {
         this.acLabel = acLabel;
     }
 
-    public HoverListener getListener() {
+    public PCListener getListener() {
         return listener;
     }
 
-    public void setListener(HoverListener listener) {
+    public void setListener(PCListener listener) {
         this.listener = listener;
     }
 
@@ -436,5 +438,25 @@ public abstract class PC {
 
     public void setOffsetY(float offsetY) {
         this.offsetY = offsetY;
+    }
+
+    public Integer getCellX() {
+        return cellX;
+    }
+
+    public Sprite getDrawSprite() {
+        return highlighted ? highlightSprite : sprite;
+    }
+
+    public void setCellX(Integer cellX) {
+        this.cellX = cellX;
+    }
+
+    public Integer getCellY() {
+        return cellY;
+    }
+
+    public void setCellY(Integer cellY) {
+        this.cellY = cellY;
     }
 }

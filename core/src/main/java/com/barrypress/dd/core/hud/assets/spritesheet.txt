@@ -72,3 +72,38 @@ m_immeril
    orig: 82, 108
    offset: 0, 0
    index: -1
+g_immeril
+   rotate: false
+   xy: 116, 412
+   size: 82, 108
+   orig: 82, 108
+   offset: 0, 0
+   index: -1
+m_allisa
+   rotate: false
+   xy: 113, 205
+   size: 88, 99
+   orig: 88, 99
+   offset: 0, 0
+   index: -1
+g_allisa
+   rotate: false
+   xy: 215, 205
+   size: 88, 99
+   orig: 88, 99
+   offset: 0, 0
+   index: -1
+m_kat
+   rotate: false
+   xy: 152, 305
+   size: 78, 106
+   orig: 78, 106
+   offset: 0, 0
+   index: -1
+g_kat
+   rotate: false
+   xy: 229, 383
+   size: 78, 106
+   orig: 78, 106
+   offset: 0, 0
+   index: -1

@@ -23,6 +23,9 @@ public class Allisa extends PC {
         setRole("Ranger");
         setColor(new Color(71/255f, 85/255f, 23/255f, .5f));
         updateTable(new Sprite(spriteSheet.findRegion(getTag())));
+        setSprite(new Sprite(spriteSheet.findRegion("m_" + getTag())));
+        setHighlightSprite(new Sprite(spriteSheet.findRegion("g_" + getTag())));
+        setOffsetX(-5f);
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);
         addStartingPower(Power.PowerType.AT_WILL);

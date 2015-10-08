@@ -24,6 +24,12 @@ public class BoardTile {
     private TextureRegion[][] splitTiles;
     private Map<TileType, TiledMapTileLayer.Cell> cellTypeMap;
     private Tiles tileData;
+    private StaticTiledMapTile floorTile;
+    private StaticTiledMapTile wallTile;
+    private StaticTiledMapTile portalTile;
+    private StaticTiledMapTile highlightTile;
+    private StaticTiledMapTile stairTile;
+    private StaticTiledMapTile highlightPortalTile;
 
     public BoardTile() {
 
@@ -44,16 +50,21 @@ public class BoardTile {
         cellTypeMap.put(TileType.HIGHLIGHT, new TiledMapTileLayer.Cell());
         cellTypeMap.put(TileType.STAIR, new TiledMapTileLayer.Cell());
 
-        StaticTiledMapTile floorTile = new StaticTiledMapTile(splitTiles[0][0]);
+        floorTile = new StaticTiledMapTile(splitTiles[0][0]);
         floorTile.getProperties().put("target", false);
-        StaticTiledMapTile wallTile = new StaticTiledMapTile(splitTiles[0][1]);
+        floorTile.getProperties().put("type", TileType.FLOOR);
+        wallTile = new StaticTiledMapTile(splitTiles[0][1]);
         wallTile.getProperties().put("target", true);
-        StaticTiledMapTile portalTile = new StaticTiledMapTile(splitTiles[1][0]);
+        wallTile.getProperties().put("type", TileType.WALL);
+        portalTile = new StaticTiledMapTile(splitTiles[1][0]);
         portalTile.getProperties().put("target", false);
-        StaticTiledMapTile highlightTile = new StaticTiledMapTile(splitTiles[0][2]);
+        portalTile.getProperties().put("type", TileType.PORTAL);
+        highlightTile = new StaticTiledMapTile(splitTiles[0][2]);
         highlightTile.getProperties().put("target", false);
-        StaticTiledMapTile stairTile = new StaticTiledMapTile(splitTiles[0][3]);
+        highlightTile.getProperties().put("type", TileType.HIGHLIGHT);
+        stairTile = new StaticTiledMapTile(splitTiles[0][3]);
         stairTile.getProperties().put("target", true);
+        stairTile.getProperties().put("type", TileType.STAIR);
 
         cellTypeMap.get(TileType.FLOOR).setTile(floorTile);
         cellTypeMap.get(TileType.WALL).setTile(wallTile);
@@ -127,8 +138,6 @@ public class BoardTile {
         layer.setCell(3, 6, cellTypeMap.get(TileType.FLOOR));
         layer.setCell(3, 7, cellTypeMap.get(TileType.FLOOR));
 
-
-
         return layer;
     }
 
@@ -188,6 +197,29 @@ public class BoardTile {
         }
 
         return rotated;
+    }
+
+    public void highlightTiles(TiledMapTileLayer layer, int x, int y, int range) {
+
+        for (int x1 = x - 1; x1 <= x + 1; x1++) {
+            for (int y1 = y - 1; y1 <= y + 1; y1++) {
+                if (x1 == x && y1 == y) continue;
+
+                if (layer.getCell(x1, y1) != null) {
+                    if (layer.getCell(x1, y1).getTile() != null) {
+                        TiledMapTileLayer.Cell cell = layer.getCell(x1, y1);
+                        Boolean use = (Boolean) layer.getCell(x1, y1).getTile().getProperties().get("target");
+                        if (!use) {
+                            TileType tileType = (TileType) layer.getCell(x1, y1).getTile().getProperties().get("type");
+                            StaticTiledMapTile hTile = new StaticTiledMapTile(splitTiles[0][2]);
+                            hTile.getProperties().put("oldtype", tileType);
+                            hTile.setId(2);
+                            layer.getCell(x1, y1).setTile(hTile);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public Map<TileType, TiledMapTileLayer.Cell> getCellTypeMap() {

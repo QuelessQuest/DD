@@ -6,8 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.barrypress.dd.core.character.PC;
 
-public class HoverListener extends ClickListener {
+import java.util.List;
 
+public class PCListener extends ClickListener {
+
+    private List<PC> characters;
     private PC pc;
     private Label name;
     private Label ac;
@@ -15,7 +18,8 @@ public class HoverListener extends ClickListener {
     private Label spd;
     private Label srg;
 
-    public HoverListener(PC pc, Label name, Label ac, Label hp, Label spd, Label srg) {
+    public PCListener(List<PC> characters, PC pc, Label name, Label ac, Label hp, Label spd, Label srg) {
+        this.characters = characters;
         this.pc = pc;
         this.name = name;
         this.ac = ac;
@@ -25,7 +29,10 @@ public class HoverListener extends ClickListener {
     }
 
     @Override
-    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+    public void clicked (InputEvent event, float x, float y) {
+        for (PC aPC : characters) {
+            aPC.setHighlighted(false);
+        }
         name.setText(pc.getName());
         ac.setText(pc.getAc().toString());
         hp.setText(pc.getHp().toString());
@@ -35,7 +42,12 @@ public class HoverListener extends ClickListener {
     }
 
     @Override
+    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+       // pc.setHighlighted(true);
+    }
+
+    @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-        pc.setHighlighted(false);
+        //pc.setHighlighted(false);
     }
 }

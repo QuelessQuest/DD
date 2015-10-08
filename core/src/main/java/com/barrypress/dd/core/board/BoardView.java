@@ -1,35 +1,44 @@
 package com.barrypress.dd.core.board;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.barrypress.dd.core.character.PC;
-import com.barrypress.dd.core.utility.DDIsometricTiledMapRenderer;
 import net.dermetfan.gdx.maps.MapUtils;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class BoardView extends ApplicationAdapter implements InputProcessor {
+
+    final Comparator<PC> spriteComparator = new Comparator<PC>() {
+        @Override
+        public int compare(PC o1, PC o2) {
+            if (o1.getCellY() > o2.getCellY()) {
+                return -1;
+            }
+            if (o1.getCellY() < o2.getCellY()) {
+                return 1;
+            }
+            // Same Y value
+            if (o1.getCellX() > o2.getCellX()) {
+                return 1;
+            }
+            if (o1.getCellX() < o2.getCellX()) {
+                return -1;
+            }
+            return 0;
+        }
+    };
 
     private float viewHeight;
     private float viewWidth;
@@ -64,8 +73,22 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         tiles.createTile((TiledMapTileLayer) layers.get("tiles"), 1, 0, 8, BoardTile.ROTATION.ROTATE_0);
         tiles.createTile((TiledMapTileLayer) layers.get("tiles"), 2, 0, 12, BoardTile.ROTATION.ROTATE_0);
 
-        characters.get(0).getSprite().setPosition(32f, 16f);
-        characters.get(1).getSprite().setPosition(64f, 32f);
+        characters.get(0).getSprite().setPosition(32f + characters.get(0).getOffsetX(), 16f);
+        characters.get(0).getHighlightSprite().setPosition(32f + characters.get(0).getOffsetX(), 16f);
+        characters.get(0).setCellX(0);
+        characters.get(0).setCellY(1);
+        characters.get(1).getSprite().setPosition(64f + characters.get(1).getOffsetX(), 32f);
+        characters.get(1).getHighlightSprite().setPosition(64f + characters.get(1).getOffsetX(), 32f);
+        characters.get(1).setCellX(0);
+        characters.get(1).setCellY(2);
+        characters.get(2).getSprite().setPosition(128f + characters.get(2).getOffsetX(), 32f);
+        characters.get(2).getHighlightSprite().setPosition(128f + characters.get(2).getOffsetX(), 32f);
+        characters.get(2).setCellX(1);
+        characters.get(2).setCellY(3);
+        characters.get(3).getSprite().setPosition(160f + characters.get(3).getOffsetX(), 16f);
+        characters.get(3).getHighlightSprite().setPosition(160f + characters.get(3).getOffsetX(), 16f);
+        characters.get(3).setCellX(2);
+        characters.get(3).setCellY(3);
 
         renderer = new IsometricTiledMapRenderer(map);
 
@@ -81,16 +104,16 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, Math.round(Gdx.graphics.getHeight() * .34f), Math.round(viewWidth), Math.round(viewHeight));
 
+        characters.sort(spriteComparator);
+
         renderer.setView(camera);
         renderer.render();
         renderer.getBatch().setProjectionMatrix(camera.combined);
         renderer.getBatch().begin();
-        if (characters.get(0).getHighlighted()) {
-            characters.get(0).getHighlightSprite().draw(renderer.getBatch());
-        } else {
-            characters.get(0).getSprite().draw(renderer.getBatch());
+
+        for (PC pc : characters) {
+            pc.getDrawSprite().draw(renderer.getBatch());
         }
-        characters.get(1).getSprite().draw(renderer.getBatch());
 
         renderer.getBatch().end();
     }
@@ -119,6 +142,20 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         int x = (int) isoSpot.x;
         int y = (int) isoSpot.y;
 
+        InputEvent inputEvent = new InputEvent();
+        inputEvent.setType(InputEvent.Type.touchDown);
+        for (PC pc : characters) {
+            pc.setHighlighted(false);
+            if (pc.getCellX() == x && pc.getCellY() == y) {
+                pc.setHighlighted(true);
+                pc.getListener().clicked(inputEvent, x, y);
+                tiles.highlightTiles((TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 5);
+            }
+        }
+
+
+
+/*
         float x1 = (32 * x) + (32 * y);
         float y1 = (16 * y) - (16 * x);
 
@@ -128,11 +165,12 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
                 Boolean wall = (Boolean) layer.getCell(x, y).getTile().getProperties().get("target");
 
                 if (wall != null && !wall) {
-                    characters.get(1).getSprite().setPosition(x1 + characters.get(1).getOffsetX(), y1 + characters.get(1).getOffsetY());
+                    characters.get(3).getSprite().setPosition(x1 + characters.get(3).getOffsetX(), y1 + characters.get(3).getOffsetY());
                     //characters.get(0).getHighlightSprite().setPosition(x1, y1);
                 }
             }
         }
+        */
         return true;
     }
 

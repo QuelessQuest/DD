@@ -3,9 +3,7 @@ package com.barrypress.dd.core.character;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.barrypress.dd.core.character.power.HealingWord;
 import com.barrypress.dd.core.character.power.Power;
 

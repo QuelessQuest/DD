@@ -24,6 +24,10 @@ public class Kat extends PC {
         setRole("Rogue");
         setColor(new Color(76/255f, 54/255f, 41/255f, 1f));
         updateTable(new Sprite(spriteSheet.findRegion(getTag())));
+        setSprite(new Sprite(spriteSheet.findRegion("m_" + getTag())));
+        setHighlightSprite(new Sprite(spriteSheet.findRegion("g_" + getTag())));
+        setOffsetX(-8f);
+        setOffsetY(-2f);
         getKnownPowers().add(new SneakAttack());
         addStartingPower(Power.PowerType.UTILITY);
         addStartingPower(Power.PowerType.AT_WILL);
