@@ -46,13 +46,11 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
     private BoardTile tiles;
     private TiledMap map;
     private IsometricTiledMapRenderer renderer;
-    private TextureAtlas spriteSheet;
     private OrthographicCamera camera;
 
     private List<PC> characters;
 
-    public BoardView(List<PC> characters, TextureAtlas spriteSheet) {
-        this.spriteSheet = spriteSheet;
+    public BoardView(List<PC> characters) {
         this.characters = characters;
     }
 
@@ -144,16 +142,15 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
 
         InputEvent inputEvent = new InputEvent();
         inputEvent.setType(InputEvent.Type.touchDown);
+        tiles.clearHighlightTiles((TiledMapTileLayer) map.getLayers().get("tiles"));
         for (PC pc : characters) {
             pc.setHighlighted(false);
             if (pc.getCellX() == x && pc.getCellY() == y) {
                 pc.setHighlighted(true);
                 pc.getListener().clicked(inputEvent, x, y);
-                tiles.highlightTiles((TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 5);
+                tiles.highlightTiles((TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 3);
             }
         }
-
-
 
 /*
         float x1 = (32 * x) + (32 * y);

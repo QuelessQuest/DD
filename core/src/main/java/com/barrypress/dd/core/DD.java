@@ -42,7 +42,7 @@ public class DD implements ApplicationListener {
         characters.add(allisa);
         characters.add(kat);
 
-        boardView = new BoardView(characters, spriteSheet);
+        boardView = new BoardView(characters);
         boardView.init();
 
         hudView = new HUDView(characters, assetManager, spriteSheet, skin);
