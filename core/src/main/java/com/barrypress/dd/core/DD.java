@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.barrypress.dd.core.board.BoardView;
 import com.barrypress.dd.core.character.*;
 import com.barrypress.dd.core.hud.HUDView;
+import com.barrypress.dd.core.monster.Monster;
+import com.barrypress.dd.core.monster.RatSwarm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,14 @@ public class DD implements ApplicationListener {
     private BoardView boardView;
 	private HUDView hudView;
     private List<PC> characters;
+    private List<Monster> monsters;
     private Skin skin;
     private TextureAtlas spriteSheet;
 
 	@Override
 	public void create () {
         characters = new ArrayList<>();
+        monsters = new ArrayList<>();
 
         assetManager = new AssetManager();
         assetManager.load("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt", TextureAtlas.class);
@@ -37,12 +41,15 @@ public class DD implements ApplicationListener {
         Immeril immeril = new Immeril(spriteSheet, skin);
         Kat kat = new Kat(spriteSheet, skin);
 
+        RatSwarm ratSwarm = new RatSwarm(spriteSheet);
+        monsters.add(ratSwarm);
+
         characters.add(thorgrim);
         characters.add(immeril);
         characters.add(allisa);
         characters.add(kat);
 
-        boardView = new BoardView(characters);
+        boardView = new BoardView(characters, monsters);
         boardView.init();
 
         hudView = new HUDView(characters, assetManager, spriteSheet, skin);

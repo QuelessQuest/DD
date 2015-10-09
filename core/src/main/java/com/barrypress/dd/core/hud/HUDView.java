@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -171,6 +168,8 @@ public class HUDView {
         leftSide.row();
         leftSide.add(character).width(width * .79f).top().left();
 
+        TextArea textArea = new TextArea("This is where stuff goes", skin);
+        textArea.setPrefRows(5.5f);
         surges = new Label("Surges Remaining:  0", skin);
         surges.setAlignment(Align.center);
         float rWidth = width * .21f;
@@ -195,7 +194,7 @@ public class HUDView {
         rightSide.add("").colspan(3).height(height * .04f);
         rightSide.row();
         rightSide.add("").width(rWidth * .13f).height(height * .18f);
-        rightSide.add("phase").width(rWidth * .81f).top().left();
+        rightSide.add(textArea).width(rWidth * .81f).top().left();
         rightSide.add("").width(rWidth * .06f);
         rightSide.row();
         rightSide.add("").colspan(3).height(height * .04f);

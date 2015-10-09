@@ -1,6 +1,5 @@
 package com.barrypress.dd.core.character;
 
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.objects.TextureMapObject;
@@ -10,43 +9,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.barrypress.dd.core.Piece;
 import com.barrypress.dd.core.character.power.Power;
 import com.barrypress.dd.core.hud.PCListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class PC {
+public abstract class PC extends Piece {
 
-    private Integer ac;
-    private Integer hp;
+
     private Integer maxHp;
     private Integer speed;
     private Integer surge;
     private Integer level;
-    private Integer cellX;
-    private Integer cellY;
-    private String name;
     private String race;
     private String role;
     private String tag;
-    private float offsetX;
-    private float offsetY;
 
     private Color color;
     private PCListener listener;
     private Image portrait;
     private Label hpLabel;
     private Label acLabel;
-    private Sprite sprite;
-    private Sprite highlightSprite;
     private Table table;
     private TextureMapObject mapObject;
 
     private boolean slowed;
     private boolean immobilized;
     private boolean attacked;
-    private boolean highlighted;
 
     private List<Power> utilityPowers;
     private List<Power> dailyPowers;
@@ -59,8 +50,7 @@ public abstract class PC {
     }
 
     public void init(Skin skin) {
-        offsetX = 0f;
-        offsetY = 0f;
+        super.init();
         utilityPowers = new ArrayList<>();
         dailyPowers = new ArrayList<>();
         atWillPowers = new ArrayList<>();
@@ -76,7 +66,6 @@ public abstract class PC {
         slowed = false;
         immobilized = false;
         attacked = false;
-        highlighted = false;
         level = 1;
     }
 
@@ -133,7 +122,7 @@ public abstract class PC {
     }
 
     public Integer takeDamage(Integer damage) {
-        hp -= damage;
+        setHp(getHp() - damage);
         return getHp();
     }
 
@@ -159,12 +148,12 @@ public abstract class PC {
     }
 
     public void heal(Integer amount) {
-        hp += amount;
-        if (hp.compareTo(maxHp) > 0) hp = maxHp;
+        setHp(getHp() + amount);
     }
 
+    @Override
     public Integer getAc() {
-        Integer tmpAc = ac;
+        Integer tmpAc = super.getAc();
         if (!buffs.isEmpty()) {
             for (Buff buff : buffs) {
                 if (buff.getType() == Buff.BuffType.AC) {
@@ -175,13 +164,15 @@ public abstract class PC {
         return tmpAc;
     }
 
+    @Override
     public void setAc(Integer ac) {
-        this.ac = ac;
+        super.setAc(ac);
         acLabel.setText(ac.toString());
     }
 
+    @Override
     public Integer getHp() {
-        Integer tmpHp = hp;
+        Integer tmpHp = super.getHp();
         if (!buffs.isEmpty()) {
             for (Buff buff : buffs) {
                 if (buff.getType() == Buff.BuffType.HP) {
@@ -192,12 +183,13 @@ public abstract class PC {
         return tmpHp;
     }
 
+    @Override
     public void setHp(Integer hp) {
-        this.hp = hp;
-        if (this.hp.compareTo(maxHp) > 0) {
-            this.hp = maxHp;
+        super.setHp(hp);
+        if (super.getHp().compareTo(maxHp) > 0) {
+            super.setHp(maxHp);
         }
-        hpLabel.setText(hp.toString());
+        hpLabel.setText(super.getHp().toString());
     }
 
     public Integer getSpeed() {
@@ -228,14 +220,6 @@ public abstract class PC {
 
     public void setSurge(Integer surge) {
         this.surge = surge;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getRace() {
@@ -390,73 +374,11 @@ public abstract class PC {
         this.listener = listener;
     }
 
-    public Sprite getSprite() {
-        return sprite;
-    }
-
-    public void setSprite(Sprite sprite) {
-        this.sprite = sprite;
-    }
-
     public TextureMapObject getMapObject() {
         return mapObject;
     }
 
     public void setMapObject(TextureMapObject mapObject) {
         this.mapObject = mapObject;
-    }
-
-    public boolean isHighlighted() {
-        return highlighted;
-    }
-
-    public void setHighlighted(boolean highlighted) {
-        this.highlighted = highlighted;
-    }
-
-    public boolean getHighlighted() { return highlighted; }
-
-    public Sprite getHighlightSprite() {
-        return highlightSprite;
-    }
-
-    public void setHighlightSprite(Sprite highlightSprite) {
-        this.highlightSprite = highlightSprite;
-    }
-
-    public float getOffsetX() {
-        return offsetX;
-    }
-
-    public void setOffsetX(float offsetX) {
-        this.offsetX = offsetX;
-    }
-
-    public float getOffsetY() {
-        return offsetY;
-    }
-
-    public void setOffsetY(float offsetY) {
-        this.offsetY = offsetY;
-    }
-
-    public Integer getCellX() {
-        return cellX;
-    }
-
-    public Sprite getDrawSprite() {
-        return highlighted ? highlightSprite : sprite;
-    }
-
-    public void setCellX(Integer cellX) {
-        this.cellX = cellX;
-    }
-
-    public Integer getCellY() {
-        return cellY;
-    }
-
-    public void setCellY(Integer cellY) {
-        this.cellY = cellY;
     }
 }

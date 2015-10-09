@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
+import com.barrypress.dd.core.character.PC;
 import com.google.gson.Gson;
 
 import java.io.FileInputStream;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class BoardTile {
 
-    public enum TileType {FLOOR, WALL, PORTAL, HIGHLIGHT, STAIR}
+    public enum TileType {FLOOR, WALL, PORTAL, HIGHLIGHT, STAIR, PORTAL_HIGHLIGHT}
 
     ;
 
@@ -72,6 +73,11 @@ public class BoardTile {
                 tile = new StaticTiledMapTile(splitTiles[0][3]);
                 tile.getProperties().put("target", true);
                 tile.getProperties().put("type", TileType.STAIR);
+                break;
+            case PORTAL_HIGHLIGHT:
+                tile = new StaticTiledMapTile(splitTiles[1][1]);
+                tile.getProperties().put("target", false);
+                tile.getProperties().put("type", TileType.PORTAL_HIGHLIGHT);
                 break;
         }
 
@@ -231,6 +237,11 @@ public class BoardTile {
                                     tile.getProperties().put("type", TileType.FLOOR);
                                     tile.getProperties().put("target", false);
                                     break;
+                                case PORTAL_HIGHLIGHT:
+                                    tile = new StaticTiledMapTile((splitTiles[1][0]));
+                                    tile.getProperties().put("type", TileType.PORTAL);
+                                    tile.getProperties().put("target", false);
+                                    break;
                             }
                             layer.getCell(x1, y1).setTile(tile);
                         }
@@ -240,7 +251,15 @@ public class BoardTile {
         }
     }
 
-    public void highlightTiles(TiledMapTileLayer layer, int x, int y, int range) {
+    private boolean isAvailable(List<PC> characters, int x, int y) {
+
+        for (PC pc : characters) {
+            if (pc.getCellX() == x && pc.getCellY() == y) return false;
+        }
+        return true;
+    }
+
+    public void highlightTiles(List<PC> characters, TiledMapTileLayer layer, int x, int y, int range) {
 
         range -= 1;
 
@@ -252,14 +271,23 @@ public class BoardTile {
                     if (layer.getCell(x1, y1).getTile() != null) {
                         Boolean use = (Boolean) layer.getCell(x1, y1).getTile().getProperties().get("target");
                         if (!use) {
-                            TileType tileType = (TileType) layer.getCell(x1, y1).getTile().getProperties().get("type");
-                            StaticTiledMapTile hTile = new StaticTiledMapTile(splitTiles[0][2]);
-                            hTile.getProperties().put("oldtype", tileType);
-                            hTile.getProperties().put("type", TileType.HIGHLIGHT);
-                            hTile.getProperties().put("target", false);
-                            layer.getCell(x1, y1).setTile(hTile);
+                            if (isAvailable(characters, x1, y1)) {
+                                TileType tileType = (TileType) layer.getCell(x1, y1).getTile().getProperties().get("type");
+                                StaticTiledMapTile hTile;
+                                if (tileType == TileType.PORTAL || tileType == TileType.PORTAL_HIGHLIGHT) {
+                                    hTile = new StaticTiledMapTile(splitTiles[1][1]);
+                                    hTile.getProperties().put("type", TileType.PORTAL_HIGHLIGHT);
+                                } else {
+                                    hTile = new StaticTiledMapTile(splitTiles[0][2]);
+                                    hTile.getProperties().put("type", TileType.HIGHLIGHT);
+                                }
+                                hTile.getProperties().put("oldtype", tileType);
+                                hTile.getProperties().put("target", false);
+
+                                layer.getCell(x1, y1).setTile(hTile);
+                            }
                             if (range > 0) {
-                                highlightTiles(layer, x1, y1, range);
+                                highlightTiles(characters, layer, x1, y1, range);
                             }
                         }
                     }
