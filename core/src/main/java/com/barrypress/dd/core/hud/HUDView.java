@@ -159,7 +159,9 @@ public class HUDView {
             } else {
                 portraits.add(pc.getTable()).colspan(2).bottom().left();
             }
-            pc.setListener(new PCListener(characters, pc, name, labelAC, labelHP, labelSPD, labelSRG));
+            PCListener pcListener = new PCListener();
+            pcListener.init(characters, pc, name, labelAC, labelHP, labelSPD, labelSRG);
+            pc.setListener(pcListener);
             pc.getTable().addListener(pc.getListener());
             portraits.row();
         }

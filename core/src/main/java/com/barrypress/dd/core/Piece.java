@@ -13,6 +13,7 @@ public abstract class Piece {
     private String name;
     private boolean highlighted;
 
+    private PieceListener listener;
     private Sprite sprite;
     private Sprite highlightSprite;
 
@@ -104,5 +105,13 @@ public abstract class Piece {
 
     public Sprite getDrawSprite() {
         return highlighted ? highlightSprite : sprite;
+    }
+
+    public PieceListener getListener() {
+        return listener;
+    }
+
+    public void setListener(PieceListener listener) {
+        this.listener = listener;
     }
 }

@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.barrypress.dd.core.Piece;
 import com.barrypress.dd.core.character.power.Power;
-import com.barrypress.dd.core.hud.PCListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,6 @@ public abstract class PC extends Piece {
     private String tag;
 
     private Color color;
-    private PCListener listener;
     private Image portrait;
     private Label hpLabel;
     private Label acLabel;
@@ -364,14 +362,6 @@ public abstract class PC extends Piece {
 
     public void setAcLabel(Label acLabel) {
         this.acLabel = acLabel;
-    }
-
-    public PCListener getListener() {
-        return listener;
-    }
-
-    public void setListener(PCListener listener) {
-        this.listener = listener;
     }
 
     public TextureMapObject getMapObject() {

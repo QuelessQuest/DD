@@ -1,4 +1,4 @@
-package com.barrypress.dd.core.hud;
+package com.barrypress.dd.core.monster;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -9,31 +9,20 @@ import com.barrypress.dd.core.character.PC;
 
 import java.util.List;
 
-public class PCListener extends PieceListener {
+public class MonsterListener extends PieceListener {
 
-    private Label spd;
-    private Label srg;
-
-    public PCListener() {}
-
-    public void init(List<PC> characters, Piece pc, Label name, Label ac, Label hp, Label spd, Label srg) {
-        super.init(characters, pc, name, ac, hp);
-        this.spd = spd;
-        this.srg = srg;
-    }
+    public MonsterListener() {}
 
     @Override
     public void clicked (InputEvent event, float x, float y) {
         for (Piece piece : getObjects()) {
             piece.setHighlighted(false);
         }
-        PC pc = (PC) getPiece();
-        getName().setText(pc.getName());
-        getAc().setText(pc.getAc().toString());
-        getHp().setText(pc.getHp().toString());
-        spd.setText(pc.getSpeed().toString());
-        srg.setText(pc.getSurge().toString());
-        pc.setHighlighted(true);
+        Monster monster = (Monster) getPiece();
+        getName().setText(monster.getName());
+        getAc().setText(monster.getAc().toString());
+        getHp().setText(monster.getHp().toString());
+        monster.setHighlighted(true);
     }
 
     @Override

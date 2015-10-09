@@ -110,7 +110,6 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
 
         List<Piece> allObjects = ListUtils.union(characters, monsters);
         allObjects.sort(spriteComparator);
-        //characters.sort(spriteComparator);
 
         renderer.setView(camera);
         renderer.render();
@@ -120,14 +119,6 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         for (Piece piece : allObjects) {
             piece.getDrawSprite().draw(renderer.getBatch());
         }
-        /*
-        for (PC pc : characters) {
-            pc.getDrawSprite().draw(renderer.getBatch());
-        }
-        for (Monster monster : monsters) {
-            monster.getSprite().draw(renderer.getBatch());
-        }
-        */
 
         renderer.getBatch().end();
     }
@@ -159,12 +150,15 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         InputEvent inputEvent = new InputEvent();
         inputEvent.setType(InputEvent.Type.touchDown);
         tiles.clearHighlightTiles((TiledMapTileLayer) map.getLayers().get("tiles"));
-        for (PC pc : characters) {
-            pc.setHighlighted(false);
-            if (pc.getCellX() == x && pc.getCellY() == y) {
-                pc.setHighlighted(true);
-                pc.getListener().clicked(inputEvent, x, y);
-                tiles.highlightTiles(characters, (TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 3);
+        List<Piece> allObjects = ListUtils.union(characters, monsters);
+        for (Piece piece : allObjects) {
+            piece.setHighlighted(false);
+            if (piece.getCellX() == x && piece.getCellY() == y) {
+                piece.setHighlighted(true);
+                piece.getListener().clicked(inputEvent, x, y);
+                if (piece instanceof PC) {
+                    tiles.highlightTiles(characters, (TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 3);
+                }
             }
         }
 
