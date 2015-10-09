@@ -11,6 +11,7 @@ public class RatSwarm extends Monster {
         setType("Animal");
         setAc(12);
         setHp(1);
+        setXp(1);
         setSprite(new Sprite(spriteSheet.findRegion("rat_swarm")));
         setOffsetX(10f);
         setOffsetY(-2f);

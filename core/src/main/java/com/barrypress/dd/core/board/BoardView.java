@@ -12,6 +12,7 @@ import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.renderers.IsometricTiledMapRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.barrypress.dd.core.Piece;
+import com.barrypress.dd.core.SharedAssets;
 import com.barrypress.dd.core.character.PC;
 import com.barrypress.dd.core.monster.Monster;
 import net.dermetfan.gdx.maps.MapUtils;
@@ -50,18 +51,19 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
     private IsometricTiledMapRenderer renderer;
     private OrthographicCamera camera;
 
-    private List<PC> characters;
-    private List<Monster> monsters;
+    private SharedAssets sharedAssets;
 
-    public BoardView(List<PC> characters, List<Monster> monsters) {
-        this.characters = characters;
-        this.monsters = monsters;
+    public BoardView(SharedAssets sharedAssets) {
+        this.sharedAssets = sharedAssets;
     }
 
     public void init() {
 
         viewHeight = (float) Gdx.graphics.getHeight() * .69f;
         viewWidth = (float) Gdx.graphics.getWidth() * .79f;
+
+        List<PC> characters = sharedAssets.getCharacters();
+        List<Monster> monsters = sharedAssets.getMonsters();
 
         tiles = new BoardTile();
 
@@ -108,7 +110,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, Math.round(Gdx.graphics.getHeight() * .34f), Math.round(viewWidth), Math.round(viewHeight));
 
-        List<Piece> allObjects = ListUtils.union(characters, monsters);
+        List<Piece> allObjects = ListUtils.union(sharedAssets.getCharacters(), sharedAssets.getMonsters());
         allObjects.sort(spriteComparator);
 
         renderer.setView(camera);
@@ -150,14 +152,22 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         InputEvent inputEvent = new InputEvent();
         inputEvent.setType(InputEvent.Type.touchDown);
         tiles.clearHighlightTiles((TiledMapTileLayer) map.getLayers().get("tiles"));
-        List<Piece> allObjects = ListUtils.union(characters, monsters);
+        List<Piece> allObjects = ListUtils.union(sharedAssets.getCharacters(), sharedAssets.getMonsters());
         for (Piece piece : allObjects) {
             piece.setHighlighted(false);
             if (piece.getCellX() == x && piece.getCellY() == y) {
                 piece.setHighlighted(true);
                 piece.getListener().clicked(inputEvent, x, y);
                 if (piece instanceof PC) {
-                    tiles.highlightTiles(characters, (TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 3);
+                    tiles.highlightTiles(sharedAssets.getCharacters(), (TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 3);
+                }
+                if (piece instanceof Monster) {
+                    sharedAssets.getmName().setText(piece.getName());
+                    sharedAssets.getmAC().setText(piece.getAc().toString());
+                    sharedAssets.getmHP().setText(piece.getHp().toString());
+                    sharedAssets.getmXP().setText(((Monster) piece).getXp().toString());
+                    ((Monster) piece).updateTactics(sharedAssets.getMonsterTactics(), sharedAssets.getSkin());
+                    ((Monster) piece).updateAttacks(sharedAssets.getMonsterAttacks(), sharedAssets.getSkin());
                 }
             }
         }

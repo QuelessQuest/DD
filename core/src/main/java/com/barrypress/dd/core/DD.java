@@ -9,32 +9,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.barrypress.dd.core.board.BoardView;
 import com.barrypress.dd.core.character.*;
 import com.barrypress.dd.core.hud.HUDView;
-import com.barrypress.dd.core.monster.Monster;
 import com.barrypress.dd.core.monster.RatSwarm;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DD implements ApplicationListener {
 
     private AssetManager assetManager;
     private BoardView boardView;
 	private HUDView hudView;
-    private List<PC> characters;
-    private List<Monster> monsters;
     private Skin skin;
     private TextureAtlas spriteSheet;
 
 	@Override
 	public void create () {
-        characters = new ArrayList<>();
-        monsters = new ArrayList<>();
 
         assetManager = new AssetManager();
         assetManager.load("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt", TextureAtlas.class);
         assetManager.finishLoading();
         spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
         skin = new com.badlogic.gdx.scenes.scene2d.ui.Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
+        SharedAssets sharedAssets = new SharedAssets(skin);
 
         Thorgrim thorgrim = new Thorgrim(spriteSheet, skin);
         Allisa allisa = new Allisa(spriteSheet, skin);
@@ -42,17 +35,17 @@ public class DD implements ApplicationListener {
         Kat kat = new Kat(spriteSheet, skin);
 
         RatSwarm ratSwarm = new RatSwarm(spriteSheet);
-        monsters.add(ratSwarm);
+        sharedAssets.getMonsters().add(ratSwarm);
 
-        characters.add(thorgrim);
-        characters.add(immeril);
-        characters.add(allisa);
-        characters.add(kat);
+        sharedAssets.getCharacters().add(thorgrim);
+        sharedAssets.getCharacters().add(immeril);
+        sharedAssets.getCharacters().add(allisa);
+        sharedAssets.getCharacters().add(kat);
 
-        boardView = new BoardView(characters, monsters);
+        boardView = new BoardView(sharedAssets);
         boardView.init();
 
-        hudView = new HUDView(characters, assetManager, spriteSheet, skin);
+        hudView = new HUDView(sharedAssets, assetManager, spriteSheet, skin);
         hudView.init();
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();

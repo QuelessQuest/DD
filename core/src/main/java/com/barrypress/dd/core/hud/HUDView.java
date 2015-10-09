@@ -10,8 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.barrypress.dd.core.SharedAssets;
 import com.barrypress.dd.core.character.PC;
-import javafx.scene.PerspectiveCamera;
+import com.barrypress.dd.core.monster.Monster;
+import com.barrypress.dd.core.monster.MonsterListener;
 
 import java.util.List;
 
@@ -25,19 +27,22 @@ public class HUDView {
     private Label labelSRG;
     private Label surges;
     private Label name;
-    private PerspectiveCamera camera;
     private Skin ddSkin;
     private Skin skin;
     private Stage stage;
     private SpriteBatch batch;
     private Table character;
     private TextureAtlas spriteSheet;
+    private SharedAssets sharedAssets;
 
     private List<PC> characters;
+    private List<Monster> monsters;
 
-    public HUDView(List<PC> characters, AssetManager assetManager, TextureAtlas spriteSheet, Skin skin) {
+    public HUDView(SharedAssets sharedAssets, AssetManager assetManager, TextureAtlas spriteSheet, Skin skin) {
         this.assetManager = assetManager;
-        this.characters = characters;
+        this.sharedAssets = sharedAssets;
+        characters = sharedAssets.getCharacters();
+        monsters = sharedAssets.getMonsters();
         this.skin = skin;
         this.spriteSheet = spriteSheet;
     }
@@ -54,7 +59,6 @@ public class HUDView {
         ddSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/text.json"));
 
         batch = new SpriteBatch();
-        camera = new PerspectiveCamera();
 
         NinePatch background = new NinePatch(spriteSheet.findRegion("background"), 10, 10, 10, 10);
         skin.add("background", background);
@@ -170,15 +174,34 @@ public class HUDView {
         leftSide.row();
         leftSide.add(character).width(width * .79f).top().left();
 
+        Table monsterTable = new Table();
+        monsterTable.setSkin(skin);
+        monsterTable.top().left();
+
+        monsterTable.add("AC");
+        monsterTable.add(sharedAssets.getmAC());
+        monsterTable.add("HP");
+        monsterTable.add(sharedAssets.getmHP());
+        monsterTable.add("XP");
+        monsterTable.add(sharedAssets.getmXP());
+        monsterTable.row();
+        monsterTable.add(sharedAssets.getMonsterTactics());
+        monsterTable.row();
+        monsterTable.add(sharedAssets.getMonsterAttacks());
+
+        MonsterListener monsterListener = new MonsterListener();
+        monsterListener.init(monsters, monsters.get(0), sharedAssets.getmName(), sharedAssets.getmAC(), sharedAssets.getmHP());
+        monsters.get(0).setListener(monsterListener);
+
         TextArea textArea = new TextArea("This is where stuff goes", skin);
         textArea.setPrefRows(5.5f);
         surges = new Label("Surges Remaining:  0", skin);
         surges.setAlignment(Align.center);
         float rWidth = width * .21f;
-        rightSide.add("Monster").colspan(3).height(height * .06f);
+        rightSide.add(sharedAssets.getmName()).colspan(3).height(height * .06f);
         rightSide.row();
         rightSide.add("").width(rWidth * .13f).height(height * .23f);
-        rightSide.add("mdetail").width(rWidth * .81f).top().left();
+        rightSide.add(monsterTable).width(rWidth * .81f).top().left();
         rightSide.add("").width(rWidth * .06f);
         rightSide.row();
         rightSide.add("").colspan(3).height(height * .04f);
@@ -220,7 +243,7 @@ public class HUDView {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //stage.setDebugAll(true);
+        stage.setDebugAll(true);
         stage.act();
         stage.draw();
     }

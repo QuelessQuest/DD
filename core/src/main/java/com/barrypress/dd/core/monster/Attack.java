@@ -3,9 +3,13 @@ package com.barrypress.dd.core.monster;
 public abstract class Attack {
 
     private String name;
-    private int attack;
-    private int damage;
+    private Integer attack;
+    private Integer damage;
+    private String specialDescription;
 
+    public Attack() {
+        specialDescription = "";
+    }
     public abstract void special();
 
     public String getName() {
@@ -16,19 +20,27 @@ public abstract class Attack {
         this.name = name;
     }
 
-    public int getAttack() {
+    public Integer getAttack() {
         return attack;
     }
 
-    public void setAttack(int attack) {
+    public void setAttack(Integer attack) {
         this.attack = attack;
     }
 
-    public int getDamage() {
+    public Integer getDamage() {
         return damage;
     }
 
-    public void setDamage(int damage) {
+    public void setDamage(Integer damage) {
         this.damage = damage;
+    }
+
+    public String getSpecialDescription() {
+        return specialDescription;
+    }
+
+    public void setSpecialDescription(String specialDescription) {
+        this.specialDescription = specialDescription;
     }
 }

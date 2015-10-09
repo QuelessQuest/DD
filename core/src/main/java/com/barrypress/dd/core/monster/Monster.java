@@ -1,8 +1,12 @@
 package com.barrypress.dd.core.monster;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.barrypress.dd.core.Piece;
 import com.barrypress.dd.core.character.PC;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +16,7 @@ import java.util.Map;
 public abstract class Monster extends Piece {
 
     private String type;
-    private int xp;
+    private Integer xp;
     private PC owner;
 
     private Map<String, String> tactics;
@@ -28,6 +32,32 @@ public abstract class Monster extends Piece {
 
     public abstract void tactics();
 
+    public void updateTactics(Table table, Skin skin) {
+
+        table.clear();
+        for (Map.Entry<String, String> tactic : tactics.entrySet()) {
+            table.add(new Label(tactic.getKey(), skin));
+            table.add(new Label(tactic.getValue(), skin));
+            table.row();
+        }
+
+    }
+
+    public void updateAttacks(Table table, Skin skin) {
+
+        table.clear();
+        for (Attack attack : attacks) {
+            table.add(new Label(attack.getName(), skin));
+            table.add(new Label(attack.getAttack().toString(), skin));
+            table.add(new Label(attack.getDamage().toString(), skin));
+            if (StringUtils.isNotEmpty(attack.getSpecialDescription())) {
+                table.row();
+                table.add(new Label(attack.getSpecialDescription(), skin)).colspan(3);
+            }
+            table.row();
+        }
+    }
+
     public String getType() {
         return type;
     }
@@ -36,11 +66,11 @@ public abstract class Monster extends Piece {
         this.type = type;
     }
 
-    public int getXp() {
+    public Integer getXp() {
         return xp;
     }
 
-    public void setXp(int xp) {
+    public void setXp(Integer xp) {
         this.xp = xp;
     }
 
