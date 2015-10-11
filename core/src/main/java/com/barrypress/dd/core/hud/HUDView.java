@@ -70,6 +70,7 @@ public class HUDView {
 
         Sprite mainGame = new Sprite(new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/maingame.png")));
 
+        Skin smallSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
         Table mainTable = new Table();
         mainTable.setFillParent(true);
         mainTable.setSkin(skin);
@@ -90,35 +91,46 @@ public class HUDView {
         characterSkills.setSkin(skin);
         nameTable.setSkin(skin);
 
-        labelAC = new Label("0", ddSkin);
-        labelHP = new Label("0", ddSkin);
-        labelSPD = new Label("0", ddSkin);
-        labelSRG = new Label("0", ddSkin);
+        labelAC = new Label("0", skin);
+        labelHP = new Label("0", skin);
+        labelSPD = new Label("0", skin);
+        labelSRG = new Label("0", skin);
         Table characterInfo = new Table();
-        characterInfo.setSkin(ddSkin);
-        characterInfo.top().left();
+        characterInfo.setSkin(skin);
+        characterInfo.bottom().left();
         float cWidth = width * .79f;
         float ntWidth = cWidth * .24f;
         float ntHeight = height * .28f;
         float ciHeight = ntHeight * .86f;
 
-        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("ac").height(ciHeight * .22f).width(ntWidth * .35f);
-        characterInfo.add(labelAC).center().height(ciHeight * .25f).width(ntWidth * .55f).bottom();
+        labelAC.setAlignment(Align.bottomLeft);
+        labelHP.setAlignment(Align.bottomLeft);
+        labelSPD.setAlignment(Align.bottomLeft);
+        labelSRG.setAlignment(Align.bottomLeft);
+
+        Label labelACTitle = new Label("AC", skin);
+        Label labelHPTitle = new Label("HP", skin);
+        Label labelSPDTitle = new Label("Speed", skin);
+        Label labelSRGTitle = new Label("Surge", skin);
+
+        labelACTitle.setAlignment(Align.bottomLeft);
+        labelHPTitle.setAlignment(Align.bottomLeft);
+        labelSPDTitle.setAlignment(Align.bottomLeft);
+        labelSRGTitle.setAlignment(Align.bottomLeft);
+
+        characterInfo.add("").height(ciHeight * .20f).width(ntWidth * .10f);
+        characterInfo.add(labelACTitle).bottom().height(ciHeight * .20f).width(ntWidth * .225f);
+        characterInfo.add(labelAC).bottom().height(ciHeight * .20f).width(ntWidth * .225f);
+        characterInfo.add(labelHPTitle).bottom().height(ciHeight * .20f).width(ntWidth * .225f);
+        characterInfo.add(labelHP).bottom().height(ciHeight * .20f).width(ntWidth * .225f);
         characterInfo.row();
-        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("hp").height(ciHeight * .22f).width(ntWidth * .35f);
-        characterInfo.add(labelHP).center().height(ciHeight * .22f).width(ntWidth * .55f);
+        characterInfo.add("").height(ciHeight * .15f).width(ntWidth * .10f);
+        characterInfo.add(labelSPDTitle).height(ciHeight * .15f).width(ntWidth * .225f);
+        characterInfo.add(labelSPD).center().height(ciHeight * .15f).width(ntWidth * .225f);
+        characterInfo.add(labelSRGTitle).height(ciHeight * .15f).width(ntWidth * .225f);
+        characterInfo.add(labelSRG).center().height(ciHeight * .15f).width(ntWidth * .225f);
         characterInfo.row();
-        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("speed").height(ciHeight * .22f).width(ntWidth * .35f);
-        characterInfo.add(labelSPD).center().height(ciHeight * .19f).width(ntWidth * .55f);
-        characterInfo.row();
-        characterInfo.add("").height(ciHeight * .22f).width(ntWidth * .1f);
-        characterInfo.add("surge").height(ciHeight * .22f).width(ntWidth * .35f);
-        characterInfo.add(labelSRG).center().height(ciHeight * .18f).width(ntWidth * .55f);
-        characterInfo.row();
-        characterInfo.add("").height(ciHeight * .12f).colspan(3);
+        characterInfo.add("").height(ciHeight * .65f).colspan(3);
 
         characterSkills.add("At Will");
         characterSkills.add(new Image(spriteSheet.findRegion("power")));
@@ -178,16 +190,30 @@ public class HUDView {
         monsterTable.setSkin(skin);
         monsterTable.top().left();
 
-        monsterTable.add("AC");
-        monsterTable.add(sharedAssets.getmAC());
-        monsterTable.add("HP");
-        monsterTable.add(sharedAssets.getmHP());
-        monsterTable.add("XP");
-        monsterTable.add(sharedAssets.getmXP());
+        Label labelACTitle2 = new Label("AC", skin);
+        Label labelHPTitle2 = new Label("HP", skin);
+        Label labelXPTitle = new Label("XP", skin);
+        labelXPTitle.setAlignment(Align.bottomLeft);
+        labelACTitle2.setAlignment(Align.bottomLeft);
+        labelHPTitle2.setAlignment(Align.bottomLeft);
+
+        float rWidth = width * .21f;
+        float mWidth = rWidth * .81f;
+        float mHeight = height * .23f;
+
+        sharedAssets.setmWidth(mWidth);
+        monsterTable.add(labelACTitle2).width(mWidth * .16f);
+        monsterTable.add(sharedAssets.getmAC()).width(mWidth * .16f);
+        monsterTable.add(labelHPTitle2).width(mWidth * .16f);
+        monsterTable.add(sharedAssets.getmHP()).width(mWidth * .16f);
+        monsterTable.add(labelXPTitle).width(mWidth * .16f);
+        monsterTable.add(sharedAssets.getmXP()).width(mWidth * .20f);
         monsterTable.row();
-        monsterTable.add(sharedAssets.getMonsterTactics());
+        monsterTable.add("").height(mHeight * .05f);
         monsterTable.row();
-        monsterTable.add(sharedAssets.getMonsterAttacks());
+        monsterTable.add(sharedAssets.getMonsterTactics()).colspan(6).height(mHeight * .60f).width(mWidth);
+        monsterTable.row();
+        monsterTable.add(sharedAssets.getMonsterAttacks()).colspan(6).width(mWidth).height(mHeight * .30f).left();
 
         MonsterListener monsterListener = new MonsterListener();
         monsterListener.init(monsters, monsters.get(0), sharedAssets.getmName(), sharedAssets.getmAC(), sharedAssets.getmHP());
@@ -197,7 +223,6 @@ public class HUDView {
         textArea.setPrefRows(5.5f);
         surges = new Label("Surges Remaining:  0", skin);
         surges.setAlignment(Align.center);
-        float rWidth = width * .21f;
         rightSide.add(sharedAssets.getmName()).colspan(3).height(height * .06f);
         rightSide.row();
         rightSide.add("").width(rWidth * .13f).height(height * .23f);
@@ -243,7 +268,7 @@ public class HUDView {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
         stage.act();
         stage.draw();
     }

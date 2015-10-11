@@ -13,14 +13,15 @@ public class RatSwarm extends Monster {
         setHp(1);
         setXp(1);
         setSprite(new Sprite(spriteSheet.findRegion("rat_swarm")));
+        setHighlightSprite(new Sprite(spriteSheet.findRegion("g_rat_swarm")));
         setOffsetX(10f);
         setOffsetY(-2f);
 
         addTactic("If the Rat Swarm is within 1 tile of a Hero,",
-                "it moves to the closest Hero's tile and attacks each Hero on the tile with a multitudes of bites.");
-        addTactic("Otherwise,", "the Rat Swarm moves 1 tile toward the closest Hero");
+                " it moves to the closest Hero's tile and attacks each Hero on the tile with a multitudes of bites.\n\n");
+        addTactic("Otherwise,", " the Rat Swarm moves 1 tile toward the closest Hero.");
 
-        addAttack(new OnlyDamage(7, 1));
+        addAttack(new OnlyDamage("Bite", 7, 1));
     }
 
     public void tactics() {}

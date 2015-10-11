@@ -3,6 +3,7 @@ package com.barrypress.dd.core;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.barrypress.dd.core.character.PC;
 import com.barrypress.dd.core.monster.Monster;
 
@@ -18,11 +19,14 @@ public class SharedAssets {
     private Label mHP;
     private Label mXP;
     private Skin skin;
+    private Skin smallSkin;
+    private float mWidth;
 
-    private Table monsterTactics = new Table();
-    private Table monsterAttacks = new Table();
+    private TextArea monsterTactics;
+    private Table monsterAttacks;
 
-    public SharedAssets(Skin skin) {
+    public SharedAssets(Skin skin, Skin smallSkin) {
+        this.smallSkin = smallSkin;
         this.skin = skin;
         characters = new ArrayList<>();
         monsters = new ArrayList<>();
@@ -31,8 +35,9 @@ public class SharedAssets {
         mHP = new Label("0", skin);
         mXP = new Label("0", skin);
 
-        monsterTactics = new Table();
+        monsterTactics = new TextArea("Text Area", smallSkin);
         monsterAttacks = new Table();
+        monsterAttacks.setSkin(smallSkin);
     }
 
     public List<PC> getCharacters() {
@@ -83,11 +88,11 @@ public class SharedAssets {
         this.mXP = mXP;
     }
 
-    public Table getMonsterTactics() {
+    public TextArea getMonsterTactics() {
         return monsterTactics;
     }
 
-    public void setMonsterTactics(Table monsterTactics) {
+    public void setMonsterTactics(TextArea monsterTactics) {
         this.monsterTactics = monsterTactics;
     }
 
@@ -105,5 +110,21 @@ public class SharedAssets {
 
     public void setSkin(Skin skin) {
         this.skin = skin;
+    }
+
+    public Skin getSmallSkin() {
+        return smallSkin;
+    }
+
+    public void setSmallSkin(Skin smallSkin) {
+        this.smallSkin = smallSkin;
+    }
+
+    public float getmWidth() {
+        return mWidth;
+    }
+
+    public void setmWidth(float mWidth) {
+        this.mWidth = mWidth;
     }
 }

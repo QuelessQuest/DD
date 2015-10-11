@@ -114,3 +114,10 @@ rat_swarm
    orig: 42, 39
    offset: 0, 0
    index: -1
+g_rat_swarm
+   rotate: false
+   xy: 157, 147
+   size: 42, 39
+   orig: 42, 39
+   offset: 0, 0
+   index: -1

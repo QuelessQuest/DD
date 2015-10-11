@@ -26,8 +26,9 @@ public class DD implements ApplicationListener {
         assetManager.load("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt", TextureAtlas.class);
         assetManager.finishLoading();
         spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
-        skin = new com.badlogic.gdx.scenes.scene2d.ui.Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
-        SharedAssets sharedAssets = new SharedAssets(skin);
+        skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
+        Skin smallSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/small.json"));
+        SharedAssets sharedAssets = new SharedAssets(skin, smallSkin);
 
         Thorgrim thorgrim = new Thorgrim(spriteSheet, skin);
         Allisa allisa = new Allisa(spriteSheet, skin);

@@ -93,6 +93,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         characters.get(3).setCellY(3);
 
         monsters.get(0).getSprite().setPosition(288f + monsters.get(0).getOffsetX(), 80f);
+        monsters.get(0).getHighlightSprite().setPosition(288f + monsters.get(0).getOffsetX(), 80f);
         monsters.get(0).setCellX(2);
         monsters.get(0).setCellY(7);
 
@@ -167,7 +168,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
                     sharedAssets.getmHP().setText(piece.getHp().toString());
                     sharedAssets.getmXP().setText(((Monster) piece).getXp().toString());
                     ((Monster) piece).updateTactics(sharedAssets.getMonsterTactics(), sharedAssets.getSkin());
-                    ((Monster) piece).updateAttacks(sharedAssets.getMonsterAttacks(), sharedAssets.getSkin());
+                    ((Monster) piece).updateAttacks(sharedAssets.getMonsterAttacks(), sharedAssets.getSmallSkin(), sharedAssets.getmWidth());
                 }
             }
         }
