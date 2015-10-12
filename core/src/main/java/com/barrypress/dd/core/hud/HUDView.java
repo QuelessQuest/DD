@@ -20,18 +20,8 @@ import java.util.List;
 public class HUDView {
 
     private AssetManager assetManager;
-    private BitmapFont bitmapFont;
-    private Label labelAC;
-    private Label labelHP;
-    private Label labelSPD;
-    private Label labelSRG;
-    private Label surges;
-    private Label name;
-    private Skin ddSkin;
     private Skin skin;
     private Stage stage;
-    private SpriteBatch batch;
-    private Table character;
     private TextureAtlas spriteSheet;
     private SharedAssets sharedAssets;
 
@@ -54,11 +44,7 @@ public class HUDView {
         float height = (float) Gdx.graphics.getHeight();
         float width  = (float) Gdx.graphics.getWidth();
 
-        bitmapFont = new BitmapFont();
-
-        ddSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/text.json"));
-
-        batch = new SpriteBatch();
+        SpriteBatch batch = new SpriteBatch();
 
         NinePatch background = new NinePatch(spriteSheet.findRegion("background"), 10, 10, 10, 10);
         skin.add("background", background);
@@ -80,7 +66,7 @@ public class HUDView {
         Table rightSide = new Table();
         Table portraits = new Table();
         Table nameTable = new Table();
-        character = new Table();
+        Table character = new Table();
         Table characterSkills = new Table();
 
         leftSide.setSkin(skin);
@@ -90,10 +76,10 @@ public class HUDView {
         characterSkills.setSkin(skin);
         nameTable.setSkin(skin);
 
-        labelAC = new Label("0", skin);
-        labelHP = new Label("0", skin);
-        labelSPD = new Label("0", skin);
-        labelSRG = new Label("0", skin);
+        Label labelAC = new Label("0", skin);
+        Label labelHP = new Label("0", skin);
+        Label labelSPD = new Label("0", skin);
+        Label labelSRG = new Label("0", skin);
         Table characterInfo = new Table();
         characterInfo.setSkin(skin);
         characterInfo.bottom().left();
@@ -147,7 +133,7 @@ public class HUDView {
         characterSkills.add("I1");
         characterSkills.add("I2");
 
-        name = new Label("Name", skin);
+        Label name = new Label("Name", skin);
         name.setAlignment(Align.center);
 
         nameTable.top().left();
@@ -236,7 +222,7 @@ public class HUDView {
 
         TextArea textArea = new TextArea("This is where stuff goes", skin);
         textArea.setPrefRows(5.5f);
-        surges = new Label("Surges Remaining:  0", skin);
+        Label surges = new Label("Surges Remaining:  0", skin);
         surges.setAlignment(Align.center);
         rightSide.add(sharedAssets.getmName()).colspan(3).height(height * .06f);
         rightSide.row();
@@ -278,8 +264,6 @@ public class HUDView {
 
     public void render() {
 
-        //Gdx.gl20.glClearColor(47/255f, 47/255f, 47/255f, 0F);
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

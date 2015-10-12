@@ -3,9 +3,11 @@ package com.barrypress.dd.core.board;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.barrypress.dd.core.character.PC;
+import com.barrypress.dd.core.Piece;
+import com.barrypress.dd.core.utility.DDUtils;
 import com.google.gson.Gson;
 
 import java.io.FileInputStream;
@@ -18,29 +20,26 @@ import java.util.Map;
 public class BoardTile {
 
     public enum TileType {FLOOR, WALL, PORTAL, HIGHLIGHT, STAIR, PORTAL_HIGHLIGHT}
-
-    ;
-
     public enum ROTATION {ROTATE_0, ROTATE_90, ROTATE_180, ROTATE_270}
 
-    ;
-
-    private Texture tiles;
     private TextureRegion[][] splitTiles;
-    private Tiles tileData;
+    private TilesFromJson tileData;
+    private Map<Integer, Map<Integer, Tile>> tiles;
 
-    public BoardTile() {
+    @SuppressWarnings("unchecked")
+    public BoardTile(TiledMap map) {
+
+        tiles = (Map<Integer, Map<Integer, Tile>>) map.getProperties().get("tileInfo");
 
         try {
             FileInputStream fis = new FileInputStream(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/board/assets/tiles.json").file());
-            tileData = new Gson().fromJson(new InputStreamReader(fis), Tiles.class);
+            tileData = new Gson().fromJson(new InputStreamReader(fis), TilesFromJson.class);
             fis.close();
         } catch (Exception e) {
-
+            System.out.println("Error reading tiles file");
         }
 
-        tiles = new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/board/assets/iso2.png"));
-        splitTiles = TextureRegion.split(tiles, 64, 64);
+        splitTiles = TextureRegion.split(new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/board/assets/iso2.png")), 64, 64);
     }
 
     private TiledMapTileLayer.Cell makeCell(TileType type) {
@@ -88,31 +87,64 @@ public class BoardTile {
     public TiledMapTileLayer createTile(TiledMapTileLayer layer, int tile, int x, int y, ROTATION rotation) {
 
         List<TileType> types = rotate(rotation, tileData.getTypes(tile));
+        Tile aTile = new Tile(tile, x, y);
 
-        layer.setCell(x, y, makeCell(types.get(0)));
-        layer.setCell(x, 1 + y, makeCell(types.get(1)));
-        layer.setCell(x, 2 + y, makeCell(types.get(2)));
-        layer.setCell(x, 3 + y, makeCell(types.get(3)));
+        if (tiles.get(x+1) != null && tiles.get(x+1).get(y) != null) {
+            aTile.setTileE(tiles.get(x+1).get(y));
+            tiles.get(x+1).get(y).setTileW(aTile);
+        }
+        if (tiles.get(x) != null && tiles.get(x).get(y-1) != null) {
+            aTile.setTileS(tiles.get(x).get(y-1));
+            tiles.get(x).get(y-1).setTileN(aTile);
+        }
+        if (tiles.get(x-1) != null && tiles.get(x-1).get(y-1) != null) {
+            aTile.setTileW(tiles.get(x-1).get(y-1));
+            tiles.get(x-1).get(y-1).setTileE(aTile);
+        }
+        if (tiles.get(x) != null && tiles.get(x).get(y+1) != null) {
+            aTile.setTileN(tiles.get(x).get(y+1));
+            tiles.get(x).get(y+1).setTileS(aTile);
+        }
 
-        layer.setCell(1 + x, y, makeCell(types.get(4)));
-        layer.setCell(1 + x, 1 + y, makeCell(types.get(5)));
-        layer.setCell(1 + x, 2 + y, makeCell(types.get(6)));
-        layer.setCell(1 + x, 3 + y, makeCell(types.get(7)));
+        int cX = x * 4;
+        int cY = y * 4;
 
-        layer.setCell(2 + x, y, makeCell(types.get(8)));
-        layer.setCell(2 + x, 1 + y, makeCell(types.get(9)));
-        layer.setCell(2 + x, 2 + y, makeCell(types.get(10)));
-        layer.setCell(2 + x, 3 + y, makeCell(types.get(11)));
+        layer.setCell(cX, cY, makeCell(types.get(0)));
+        layer.setCell(cX, 1 + cY, makeCell(types.get(1)));
+        layer.setCell(cX, 2 + cY, makeCell(types.get(2)));
+        layer.setCell(cX, 3 + cY, makeCell(types.get(3)));
 
-        layer.setCell(3 + x, y, makeCell(types.get(12)));
-        layer.setCell(3 + x, 1 + y, makeCell(types.get(13)));
-        layer.setCell(3 + x, 2 + y, makeCell(types.get(14)));
-        layer.setCell(3 + x, 3 + y, makeCell(types.get(15)));
+        layer.setCell(1 + cX, cY, makeCell(types.get(4)));
+        layer.setCell(1 + cX, 1 + cY, makeCell(types.get(5)));
+        layer.setCell(1 + cX, 2 + cY, makeCell(types.get(6)));
+        layer.setCell(1 + cX, 3 + cY, makeCell(types.get(7)));
+
+        layer.setCell(2 + cX, cY, makeCell(types.get(8)));
+        layer.setCell(2 + cX, 1 + cY, makeCell(types.get(9)));
+        layer.setCell(2 + cX, 2 + cY, makeCell(types.get(10)));
+        layer.setCell(2 + cX, 3 + cY, makeCell(types.get(11)));
+
+        layer.setCell(3 + cX, cY, makeCell(types.get(12)));
+        layer.setCell(3 + cX, 1 + cY, makeCell(types.get(13)));
+        layer.setCell(3 + cX, 2 + cY, makeCell(types.get(14)));
+        layer.setCell(3 + cX, 3 + cY, makeCell(types.get(15)));
 
         return layer;
     }
 
     public TiledMapTileLayer createStartTile(TiledMapTileLayer layer) {
+
+        Tile sTile1 = new Tile(0, 0, 0);
+        Tile sTile2 = new Tile(0, 0, 4);
+
+        sTile1.setTileN(sTile2);
+        sTile2.setTileS(sTile1);
+
+        Map<Integer, Tile> newTile = new HashMap<>();
+        newTile.put(0, sTile1);
+        newTile.put(1, sTile2);
+
+        tiles.put(0, newTile);
 
         layer.setCell(0, 0, makeCell(TileType.WALL));
         layer.setCell(0, 1, makeCell(TileType.FLOOR));
@@ -261,15 +293,7 @@ public class BoardTile {
         }
     }
 
-    private boolean isAvailable(List<PC> characters, int x, int y) {
-
-        for (PC pc : characters) {
-            if (pc.getCellX() == x && pc.getCellY() == y) return false;
-        }
-        return true;
-    }
-
-    public void highlightTiles(List<PC> characters, TiledMapTileLayer layer, int x, int y, int range) {
+    public void highlightTiles(List<? extends Piece> objects, TiledMapTileLayer layer, int x, int y, int range) {
 
         range -= 1;
 
@@ -281,7 +305,7 @@ public class BoardTile {
                     if (layer.getCell(x1, y1).getTile() != null) {
                         Boolean use = (Boolean) layer.getCell(x1, y1).getTile().getProperties().get("target");
                         if (!use) {
-                            if (isAvailable(characters, x1, y1)) {
+                            if (DDUtils.isAvailable(objects, x1, y1)) {
                                 TileType tileType = (TileType) layer.getCell(x1, y1).getTile().getProperties().get("type");
                                 StaticTiledMapTile hTile;
                                 if (tileType == TileType.PORTAL || tileType == TileType.PORTAL_HIGHLIGHT) {
@@ -297,12 +321,16 @@ public class BoardTile {
                                 layer.getCell(x1, y1).setTile(hTile);
                             }
                             if (range > 0) {
-                                highlightTiles(characters, layer, x1, y1, range);
+                                highlightTiles(objects, layer, x1, y1, range);
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    public Map<Integer, Map<Integer, Tile>> getTiles() {
+        return tiles;
     }
 }

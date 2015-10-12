@@ -2,6 +2,17 @@ package com.barrypress.dd.core.monster;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.barrypress.dd.core.Piece;
+import com.barrypress.dd.core.board.Tile;
+import com.barrypress.dd.core.character.PC;
+import com.barrypress.dd.core.utility.DDUtils;
+import org.apache.commons.collections4.ListUtils;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RatSwarm extends Monster {
 
@@ -24,6 +35,40 @@ public class RatSwarm extends Monster {
         addAttack(new OnlyDamage("Bite", 7, 1));
     }
 
-    public void tactics() {}
+    public String tactics(TiledMap map, List<PC> characters, List<Monster> monsters) {
+
+        List<Piece> allObjects = ListUtils.union(characters, monsters);
+
+        PC nearest = (PC) getNearestOnTile(characters);
+        if (nearest != null) {
+            move(map, nearest, allObjects);
+            return attack(getAttacks().get(0), nearest);
+        } else {
+            nearest = (PC) getNearestWithinXTiles(1, characters);
+            if (nearest != null) {
+                move(map, nearest, allObjects);
+                return attack(getAttacks().get(0), nearest);
+            } else {
+                DDUtils.moveTowardNearest(map, this, getTileX(), getTileY(), characters);
+                return getName() + " moves closer.......";
+            }
+        }
+    }
+
+    private String attack(Attack attack, PC pc) {
+
+        String result = getName();
+
+        int roll = DDUtils.rolld20();
+
+        if ((roll + attack.getAttack()) >= pc.getAc()) {
+            result += " " + attack.getName() + " " + pc.getName() + " for " + attack.getDamage();
+            pc.takeDamage(attack.getDamage());
+        } else {
+            result += " attempts to " + attack.getName() + " " + pc.getName() + " and misses.";
+        }
+
+        return result;
+    }
 
 }

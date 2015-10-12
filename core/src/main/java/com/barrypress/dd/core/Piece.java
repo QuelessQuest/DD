@@ -1,6 +1,12 @@
 package com.barrypress.dd.core;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.barrypress.dd.core.board.BoardTile;
+import com.barrypress.dd.core.utility.DDUtils;
+
+import java.util.List;
 
 public abstract class Piece {
 
@@ -8,6 +14,8 @@ public abstract class Piece {
     private Integer hp;
     private int cellX;
     private int cellY;
+    private int tileX;
+    private int tileY;
     private float offsetX;
     private float offsetY;
     private String name;
@@ -21,6 +29,32 @@ public abstract class Piece {
         offsetX = 0f;
         offsetY = 0f;
         highlighted = false;
+    }
+
+    // TODO - Is it a valid cell??
+    public void move(TiledMap map, Piece piece, List<Piece> pieces) {
+
+        int x = piece.getCellX();
+        int y = piece.getCellY();
+
+        for (int x1 = x - 1; x1 <= x + 1; x1++) {
+            for (int y1 = y - 1; y1 <= y + 1; y1++) {
+                if (x1 == x && y1 == y) continue;
+                if (DDUtils.isAvailable(pieces, x1, y1)) {
+                    setCellX(x1);
+                    setCellY(y1);
+                    return;
+                }
+            }
+        }
+    }
+
+    public Piece getNearestOnTile(List<? extends Piece> pieces) {
+        return DDUtils.getNearestOnTile(getTileX(), getTileY(), getCellX(), getCellY(), pieces);
+    }
+
+    public Piece getNearestWithinXTiles(int distance, List<? extends Piece> pieces) {
+        return DDUtils.getNearestWithinXTiles(distance, getTileX(), getTileY(), pieces);
     }
 
     public int getCellX() {
@@ -113,5 +147,21 @@ public abstract class Piece {
 
     public void setListener(PieceListener listener) {
         this.listener = listener;
+    }
+
+    public int getTileX() {
+        return tileX;
+    }
+
+    public void setTileX(int tileX) {
+        this.tileX = tileX;
+    }
+
+    public int getTileY() {
+        return tileY;
+    }
+
+    public void setTileY(int tileY) {
+        this.tileY = tileY;
     }
 }

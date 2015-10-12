@@ -3,7 +3,7 @@ package com.barrypress.dd.core.board;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tiles {
+public class TilesFromJson {
 
     public class Details {
         private int index;
@@ -32,7 +32,7 @@ public class Tiles {
 
     private List<Details> tiles;
 
-    public Tiles() {
+    public TilesFromJson() {
         tiles = new ArrayList<>();
     }
 

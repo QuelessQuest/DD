@@ -1,6 +1,6 @@
 package com.barrypress.dd.core.monster;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -32,7 +32,7 @@ public abstract class Monster extends Piece {
         attacks = new ArrayList<>();
     }
 
-    public abstract void tactics();
+    public abstract String tactics(TiledMap map, List<PC> characters, List<Monster> monsters);
 
     public void updateTactics(TextArea text, Skin skin) {
 

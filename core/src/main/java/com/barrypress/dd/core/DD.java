@@ -13,20 +13,17 @@ import com.barrypress.dd.core.monster.RatSwarm;
 
 public class DD implements ApplicationListener {
 
-    private AssetManager assetManager;
     private BoardView boardView;
 	private HUDView hudView;
-    private Skin skin;
-    private TextureAtlas spriteSheet;
 
 	@Override
 	public void create () {
 
-        assetManager = new AssetManager();
+        AssetManager assetManager = new AssetManager();
         assetManager.load("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt", TextureAtlas.class);
         assetManager.finishLoading();
-        spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
-        skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
+        TextureAtlas spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
+        Skin skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
         Skin smallSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/small.json"));
         SharedAssets sharedAssets = new SharedAssets(skin, smallSkin);
 

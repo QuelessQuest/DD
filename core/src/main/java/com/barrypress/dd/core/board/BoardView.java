@@ -15,11 +15,14 @@ import com.barrypress.dd.core.Piece;
 import com.barrypress.dd.core.SharedAssets;
 import com.barrypress.dd.core.character.PC;
 import com.barrypress.dd.core.monster.Monster;
+import com.barrypress.dd.core.utility.DDUtils;
 import net.dermetfan.gdx.maps.MapUtils;
 import org.apache.commons.collections4.ListUtils;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BoardView extends ApplicationAdapter implements InputProcessor {
 
@@ -50,6 +53,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
     private TiledMap map;
     private IsometricTiledMapRenderer renderer;
     private OrthographicCamera camera;
+    private Map<Integer, Map<Integer, Tile>> tileInfo;
 
     private SharedAssets sharedAssets;
 
@@ -65,10 +69,13 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         List<PC> characters = sharedAssets.getCharacters();
         List<Monster> monsters = sharedAssets.getMonsters();
 
-        tiles = new BoardTile();
+        tileInfo = new HashMap<>();
 
         map = new TiledMap();
         MapLayers layers = map.getLayers();
+        map.getProperties().put("tileInfo", tileInfo);
+
+        tiles = new BoardTile(map);
 
         TiledMapTileLayer layer = new TiledMapTileLayer(100, 100, 64, 32);
 
@@ -79,23 +86,33 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         characters.get(0).getHighlightSprite().setPosition(32f + characters.get(0).getOffsetX(), 16f);
         characters.get(0).setCellX(0);
         characters.get(0).setCellY(1);
+        characters.get(0).setTileX(0);
+        characters.get(0).setTileY(0);
         characters.get(1).getSprite().setPosition(64f + characters.get(1).getOffsetX(), 32f);
         characters.get(1).getHighlightSprite().setPosition(64f + characters.get(1).getOffsetX(), 32f);
         characters.get(1).setCellX(0);
         characters.get(1).setCellY(2);
+        characters.get(1).setTileX(0);
+        characters.get(1).setTileY(0);
         characters.get(2).getSprite().setPosition(128f + characters.get(2).getOffsetX(), 32f);
         characters.get(2).getHighlightSprite().setPosition(128f + characters.get(2).getOffsetX(), 32f);
         characters.get(2).setCellX(1);
         characters.get(2).setCellY(3);
+        characters.get(2).setTileX(0);
+        characters.get(2).setTileY(0);
         characters.get(3).getSprite().setPosition(160f + characters.get(3).getOffsetX(), 16f);
         characters.get(3).getHighlightSprite().setPosition(160f + characters.get(3).getOffsetX(), 16f);
         characters.get(3).setCellX(2);
         characters.get(3).setCellY(3);
+        characters.get(3).setTileX(0);
+        characters.get(3).setTileY(0);
 
         monsters.get(0).getSprite().setPosition(288f + monsters.get(0).getOffsetX(), 80f);
         monsters.get(0).getHighlightSprite().setPosition(288f + monsters.get(0).getOffsetX(), 80f);
         monsters.get(0).setCellX(2);
         monsters.get(0).setCellY(7);
+        monsters.get(0).setTileX(0);
+        monsters.get(0).setTileY(1);
 
         renderer = new IsometricTiledMapRenderer(map);
 
@@ -140,30 +157,6 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         return false;
     }
 
-    private void movePC(TiledMapTileLayer layer, int x, int y) {
-
-        float x1 = (32 * x) + (32 * y);
-        float y1 = (16 * y) - (16 * x);
-
-        if (layer.getCell(x, y) != null) {
-            if (layer.getCell(x, y).getTile() != null) {
-                Boolean wall = (Boolean) layer.getCell(x, y).getTile().getProperties().get("target");
-
-                if (wall != null && !wall) {
-                    for (PC pc : sharedAssets.getCharacters()) {
-                        if (pc.isHighlighted()) {
-                            pc.getSprite().setPosition(x1 + pc.getOffsetX(), y1 + pc.getOffsetY());
-                            pc.getHighlightSprite().setPosition(x1 + pc.getOffsetX(), y1 + pc.getOffsetY());
-                            pc.setCellX(x);
-                            pc.setCellY(y);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
@@ -179,7 +172,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
             inputEvent.setType(InputEvent.Type.touchDown);
             TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("tiles");
             if (tiles.isHighlightTile(layer, x, y)) {
-                movePC(layer, x, y);
+                DDUtils.movePC(sharedAssets.getCharacters(), layer, x, y);
                 tiles.clearHighlightTiles(layer);
             } else {
                 tiles.clearHighlightTiles(layer);
@@ -190,7 +183,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
                         piece.setHighlighted(true);
                         piece.getListener().clicked(inputEvent, x, y);
                         if (piece instanceof PC) {
-                            tiles.highlightTiles(sharedAssets.getCharacters(), layer, x, y, 3);
+                            tiles.highlightTiles(allObjects, layer, x, y, 3);
                         }
                         if (piece instanceof Monster) {
                             sharedAssets.getmName().setText(piece.getName());
@@ -199,6 +192,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
                             sharedAssets.getmXP().setText(((Monster) piece).getXp().toString());
                             ((Monster) piece).updateTactics(sharedAssets.getMonsterTactics(), sharedAssets.getSkin());
                             ((Monster) piece).updateAttacks(sharedAssets.getMonsterAttacks(), sharedAssets.getSmallSkin(), sharedAssets.getmWidth());
+                            ((Monster) piece).tactics(map, sharedAssets.getCharacters(), sharedAssets.getMonsters());
                         }
                     }
                 }
