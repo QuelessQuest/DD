@@ -36,6 +36,8 @@ public abstract class PC extends Piece {
     private boolean slowed;
     private boolean immobilized;
     private boolean attacked;
+    private boolean movedOne;
+    private boolean movedTwo;
 
     private List<Power> utilityPowers;
     private List<Power> dailyPowers;
@@ -65,6 +67,8 @@ public abstract class PC extends Piece {
         immobilized = false;
         attacked = false;
         level = 1;
+        movedOne = false;
+        movedTwo = false;
     }
 
     public abstract void endHeroPhaseSpecial();
@@ -160,6 +164,22 @@ public abstract class PC extends Piece {
             }
         }
         return tmpAc;
+    }
+
+    public boolean isMovedOne() {
+        return movedOne;
+    }
+
+    public boolean isMovedTwo() {
+        return movedTwo;
+    }
+
+    public void moved() {
+        if (!movedOne)
+            movedOne = true;
+        else if (!movedTwo) {
+            movedTwo = true;
+        }
     }
 
     @Override

@@ -70,7 +70,6 @@ public class HUDView {
 
         Sprite mainGame = new Sprite(new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/maingame.png")));
 
-        Skin smallSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
         Table mainTable = new Table();
         mainTable.setFillParent(true);
         mainTable.setSkin(skin);
@@ -165,12 +164,26 @@ public class HUDView {
         character.add("").width(cWidth * .035f);
         character.add("details").top().right().width(cWidth * .24f);
 
+        Table monsterPortrait = new Table();
+        monsterPortrait.setSkin(skin);
+        Label monsterAC = new Label("0", skin);
+        monsterAC.setAlignment(Align.center);
+        Label monsterHP = new Label("0", skin);
+        monsterHP.setAlignment(Align.center);
+        monsterPortrait.background(new SpriteDrawable(new Sprite(spriteSheet.findRegion("blank_circle"))));
+        monsterPortrait.add("").colspan(3).height(55f).width(100f);
+        monsterPortrait.row();
+        monsterPortrait.bottom().left();
+        monsterPortrait.add(monsterAC).width(40f).height(45f).top().left();
+        monsterPortrait.add("").width(10f);
+        monsterPortrait.add(monsterHP).width(50f).height(45f).top().left();
+
         portraits.left().top();
         boolean flag = true;
         for (PC pc : characters) {
             if (flag) {
                 portraits.add(pc.getTable()).bottom().left();
-                portraits.add(new Image(spriteSheet.findRegion("blank_circle"))).expandX().top().right();
+                portraits.add(monsterPortrait).expandX().top().right();
                 flag = false;
             } else {
                 portraits.add(pc.getTable()).colspan(2).bottom().left();
@@ -201,7 +214,9 @@ public class HUDView {
         float mWidth = rWidth * .81f;
         float mHeight = height * .23f;
 
-        sharedAssets.setmWidth(mWidth);
+        sharedAssets.setmWidth(mWidth * .90f);
+        monsterTable.add("").colspan(6).height(mHeight * .05f);
+        monsterTable.row();
         monsterTable.add(labelACTitle2).width(mWidth * .16f);
         monsterTable.add(sharedAssets.getmAC()).width(mWidth * .16f);
         monsterTable.add(labelHPTitle2).width(mWidth * .16f);
@@ -209,11 +224,11 @@ public class HUDView {
         monsterTable.add(labelXPTitle).width(mWidth * .16f);
         monsterTable.add(sharedAssets.getmXP()).width(mWidth * .20f);
         monsterTable.row();
-        monsterTable.add("").height(mHeight * .05f);
+        monsterTable.add("").colspan(6).height(mHeight * .05f);
         monsterTable.row();
         monsterTable.add(sharedAssets.getMonsterTactics()).colspan(6).height(mHeight * .60f).width(mWidth);
         monsterTable.row();
-        monsterTable.add(sharedAssets.getMonsterAttacks()).colspan(6).width(mWidth).height(mHeight * .30f).left();
+        monsterTable.add(sharedAssets.getMonsterAttacks()).colspan(6).width(mWidth * .90f).height(mHeight * .30f).left();
 
         MonsterListener monsterListener = new MonsterListener();
         monsterListener.init(monsters, monsters.get(0), sharedAssets.getmName(), sharedAssets.getmAC(), sharedAssets.getmHP());
@@ -268,7 +283,7 @@ public class HUDView {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //stage.setDebugAll(true);
+        stage.setDebugAll(true);
         stage.act();
         stage.draw();
     }

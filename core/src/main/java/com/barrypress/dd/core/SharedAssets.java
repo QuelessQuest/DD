@@ -12,6 +12,8 @@ import java.util.List;
 
 public class SharedAssets {
 
+    public enum Phase { HERO, VILLAIN };
+
     private List<PC> characters;
     private List<Monster> monsters;
     private Label mName;
@@ -21,6 +23,7 @@ public class SharedAssets {
     private Skin skin;
     private Skin smallSkin;
     private float mWidth;
+    private Phase phase;
 
     private TextArea monsterTactics;
     private Table monsterAttacks;
@@ -34,6 +37,7 @@ public class SharedAssets {
         mAC = new Label("0", skin);
         mHP = new Label("0", skin);
         mXP = new Label("0", skin);
+        phase = Phase.HERO;
 
         monsterTactics = new TextArea("Text Area", smallSkin);
         monsterAttacks = new Table();
@@ -126,5 +130,13 @@ public class SharedAssets {
 
     public void setmWidth(float mWidth) {
         this.mWidth = mWidth;
+    }
+
+    public Phase getPhase() {
+        return phase;
+    }
+
+    public void setPhase(Phase phase) {
+        this.phase = phase;
     }
 }

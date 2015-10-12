@@ -140,55 +140,71 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         return false;
     }
 
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    private void movePC(TiledMapTileLayer layer, int x, int y) {
 
-        Vector3 clickCoordinates = new Vector3(screenX, screenY, 0);
-        Vector3 position = camera.unproject(clickCoordinates, 0, Math.round(Gdx.graphics.getHeight() * .34f), Math.round(viewWidth), Math.round(viewHeight));
-        Vector3 isoSpot = MapUtils.toIsometricGridPoint(position, 64f, 32f);
-
-        int x = (int) isoSpot.x;
-        int y = (int) isoSpot.y;
-
-        InputEvent inputEvent = new InputEvent();
-        inputEvent.setType(InputEvent.Type.touchDown);
-        tiles.clearHighlightTiles((TiledMapTileLayer) map.getLayers().get("tiles"));
-        List<Piece> allObjects = ListUtils.union(sharedAssets.getCharacters(), sharedAssets.getMonsters());
-        for (Piece piece : allObjects) {
-            piece.setHighlighted(false);
-            if (piece.getCellX() == x && piece.getCellY() == y) {
-                piece.setHighlighted(true);
-                piece.getListener().clicked(inputEvent, x, y);
-                if (piece instanceof PC) {
-                    tiles.highlightTiles(sharedAssets.getCharacters(), (TiledMapTileLayer) map.getLayers().get("tiles"), x, y, 3);
-                }
-                if (piece instanceof Monster) {
-                    sharedAssets.getmName().setText(piece.getName());
-                    sharedAssets.getmAC().setText(piece.getAc().toString());
-                    sharedAssets.getmHP().setText(piece.getHp().toString());
-                    sharedAssets.getmXP().setText(((Monster) piece).getXp().toString());
-                    ((Monster) piece).updateTactics(sharedAssets.getMonsterTactics(), sharedAssets.getSkin());
-                    ((Monster) piece).updateAttacks(sharedAssets.getMonsterAttacks(), sharedAssets.getSmallSkin(), sharedAssets.getmWidth());
-                }
-            }
-        }
-
-/*
         float x1 = (32 * x) + (32 * y);
         float y1 = (16 * y) - (16 * x);
 
-        TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("tiles");
         if (layer.getCell(x, y) != null) {
             if (layer.getCell(x, y).getTile() != null) {
                 Boolean wall = (Boolean) layer.getCell(x, y).getTile().getProperties().get("target");
 
                 if (wall != null && !wall) {
-                    characters.get(3).getSprite().setPosition(x1 + characters.get(3).getOffsetX(), y1 + characters.get(3).getOffsetY());
-                    //characters.get(0).getHighlightSprite().setPosition(x1, y1);
+                    for (PC pc : sharedAssets.getCharacters()) {
+                        if (pc.isHighlighted()) {
+                            pc.getSprite().setPosition(x1 + pc.getOffsetX(), y1 + pc.getOffsetY());
+                            pc.getHighlightSprite().setPosition(x1 + pc.getOffsetX(), y1 + pc.getOffsetY());
+                            pc.setCellX(x);
+                            pc.setCellY(y);
+                            break;
+                        }
+                    }
                 }
             }
         }
-        */
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+
+        if (sharedAssets.getPhase() == SharedAssets.Phase.HERO) {
+            Vector3 clickCoordinates = new Vector3(screenX, screenY, 0);
+            Vector3 position = camera.unproject(clickCoordinates, 0, Math.round(Gdx.graphics.getHeight() * .34f), Math.round(viewWidth), Math.round(viewHeight));
+            Vector3 isoSpot = MapUtils.toIsometricGridPoint(position, 64f, 32f);
+
+            int x = (int) isoSpot.x;
+            int y = (int) isoSpot.y;
+
+            InputEvent inputEvent = new InputEvent();
+            inputEvent.setType(InputEvent.Type.touchDown);
+            TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get("tiles");
+            if (tiles.isHighlightTile(layer, x, y)) {
+                movePC(layer, x, y);
+                tiles.clearHighlightTiles(layer);
+            } else {
+                tiles.clearHighlightTiles(layer);
+                List<Piece> allObjects = ListUtils.union(sharedAssets.getCharacters(), sharedAssets.getMonsters());
+                for (Piece piece : allObjects) {
+                    piece.setHighlighted(false);
+                    if (piece.getCellX() == x && piece.getCellY() == y) {
+                        piece.setHighlighted(true);
+                        piece.getListener().clicked(inputEvent, x, y);
+                        if (piece instanceof PC) {
+                            tiles.highlightTiles(sharedAssets.getCharacters(), layer, x, y, 3);
+                        }
+                        if (piece instanceof Monster) {
+                            sharedAssets.getmName().setText(piece.getName());
+                            sharedAssets.getmAC().setText(piece.getAc().toString());
+                            sharedAssets.getmHP().setText(piece.getHp().toString());
+                            sharedAssets.getmXP().setText(((Monster) piece).getXp().toString());
+                            ((Monster) piece).updateTactics(sharedAssets.getMonsterTactics(), sharedAssets.getSkin());
+                            ((Monster) piece).updateAttacks(sharedAssets.getMonsterAttacks(), sharedAssets.getSmallSkin(), sharedAssets.getmWidth());
+                        }
+                    }
+                }
+            }
+        }
+
         return true;
     }
 

@@ -211,6 +211,16 @@ public class BoardTile {
         return rotated;
     }
 
+    public boolean isHighlightTile(TiledMapTileLayer layer, int x, int y) {
+        if (layer.getCell(x, y) != null) {
+            if (layer.getCell(x, y).getTile() != null) {
+                TileType tileType = (TileType) layer.getCell(x, y).getTile().getProperties().get("type");
+                return (tileType == TileType.HIGHLIGHT || tileType == TileType.PORTAL_HIGHLIGHT);
+            }
+        }
+        return false;
+    }
+
     public void clearHighlightTiles(TiledMapTileLayer layer) {
         int x = layer.getWidth();
         int y = layer.getHeight();
