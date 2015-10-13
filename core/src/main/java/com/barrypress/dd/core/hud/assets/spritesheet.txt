@@ -30,6 +30,13 @@ immeril
   orig: 100, 100
   offset: 0, 0
   index: -1
+p_rat_swarm
+  rotate: false
+  xy: 300, 100
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
 blank_circle
   rotate: false
   xy: 0, 100

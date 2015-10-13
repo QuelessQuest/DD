@@ -43,7 +43,7 @@ public class DD implements ApplicationListener {
         boardView = new BoardView(sharedAssets);
         boardView.init();
 
-        hudView = new HUDView(sharedAssets, assetManager, spriteSheet, skin);
+        hudView = new HUDView(sharedAssets, assetManager, spriteSheet);
         hudView.init();
 
         InputMultiplexer inputMultiplexer = new InputMultiplexer();

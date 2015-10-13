@@ -1,5 +1,6 @@
 package com.barrypress.dd.core.board;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -54,6 +55,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
     private IsometricTiledMapRenderer renderer;
     private OrthographicCamera camera;
     private Map<Integer, Map<Integer, Tile>> tileInfo;
+    private ShapeRenderer shapeRenderer;
 
     private SharedAssets sharedAssets;
 
@@ -76,6 +78,7 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         map.getProperties().put("tileInfo", tileInfo);
 
         tiles = new BoardTile(map);
+        shapeRenderer = new ShapeRenderer();
 
         TiledMapTileLayer layer = new TiledMapTileLayer(100, 100, 64, 32);
 
@@ -133,9 +136,36 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
 
         renderer.setView(camera);
         renderer.render();
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+
+        for (Integer x : tileInfo.keySet()) {
+            for (Integer y : tileInfo.get(x).keySet()) {
+
+                int cellX = tileInfo.get(x).get(y).getCellX();
+                int cellY = tileInfo.get(x).get(y).getCellY();
+
+                float x1 = (32 * cellX) + (32 * cellY);
+                float y1 = (16 * cellY) - (16 * cellX) + 16f;
+                float x2 = (32 * cellX) + (32 * (cellY + 3)) + 32f;
+                float y2 = (16 * (cellY + 3)) - (16 * cellX) + 32f;
+                float x3 = (32 * (cellX + 3)) + (32 * (cellY + 3)) + 64f;
+                float y3 = (16 * (cellY + 3)) - (16 * (cellX + 3)) + 16f;
+                float x4 = (32 * (cellX + 3)) + (32 * cellY) + 32f;
+                float y4 = (16 * (cellY)) - (16 * (cellX + 3));
+
+                shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+                shapeRenderer.setColor(1f, 0f, 0f, 1f);
+                shapeRenderer.line(x1, y1, x2, y2);
+                shapeRenderer.line(x2, y2, x3, y3);
+                shapeRenderer.line(x3, y3, x4, y4);
+                shapeRenderer.line(x1, y1, x4, y4);
+                shapeRenderer.end();
+            }
+        }
+
         renderer.getBatch().setProjectionMatrix(camera.combined);
         renderer.getBatch().begin();
-
         for (Piece piece : allObjects) {
             piece.getDrawSprite().draw(renderer.getBatch());
         }
@@ -189,10 +219,13 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
                             sharedAssets.getmName().setText(piece.getName());
                             sharedAssets.getmAC().setText(piece.getAc().toString());
                             sharedAssets.getmHP().setText(piece.getHp().toString());
+                            sharedAssets.getMonsterPortrait().background(((Monster) piece).getPortrait());
+                            sharedAssets.getMpAC().setText(piece.getAc().toString());
+                            sharedAssets.getMpHP().setText(piece.getHp().toString());
                             sharedAssets.getmXP().setText(((Monster) piece).getXp().toString());
                             ((Monster) piece).updateTactics(sharedAssets.getMonsterTactics(), sharedAssets.getSkin());
                             ((Monster) piece).updateAttacks(sharedAssets.getMonsterAttacks(), sharedAssets.getSmallSkin(), sharedAssets.getmWidth());
-                            ((Monster) piece).tactics(map, sharedAssets.getCharacters(), sharedAssets.getMonsters());
+                            sharedAssets.getLogArea().appendText(((Monster) piece).tactics(map, sharedAssets.getCharacters(), sharedAssets.getMonsters()));
                         }
                     }
                 }

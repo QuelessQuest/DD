@@ -3,6 +3,7 @@ package com.barrypress.dd.core.monster;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.barrypress.dd.core.Piece;
 import com.barrypress.dd.core.character.PC;
 import com.barrypress.dd.core.utility.DDUtils;
@@ -21,6 +22,7 @@ public class RatSwarm extends Monster {
         setXp(1);
         setSprite(new Sprite(spriteSheet.findRegion("rat_swarm")));
         setHighlightSprite(new Sprite(spriteSheet.findRegion("g_rat_swarm")));
+        setPortrait(new SpriteDrawable(new Sprite(spriteSheet.findRegion("p_rat_swarm"))));
         setOffsetX(10f);
         setOffsetY(-2f);
 
@@ -34,34 +36,42 @@ public class RatSwarm extends Monster {
     public String tactics(TiledMap map, List<PC> characters, List<Monster> monsters) {
 
         List<Piece> allObjects = ListUtils.union(characters, monsters);
+        String results = getName() + " activates\n";
 
         PC nearest = (PC) getNearestOnTile(map, characters);
         if (nearest != null) {
             DDUtils.move(map, this, nearest, allObjects);
-            return attack(getAttacks().get(0), nearest);
+            results += getName() + " moves next to " + nearest.getName() + "\n";
+            return results + attack(getAttacks().get(0), characters);
         } else {
             nearest = (PC) getNearestWithinXTiles(map, 1, characters);
             if (nearest != null) {
                 DDUtils.move(map, this, nearest, allObjects);
-                return attack(getAttacks().get(0), nearest);
+                results += getName() + " moves 1 tile then next to " + nearest.getName() + "\n";
+                return results + attack(getAttacks().get(0), characters);
             } else {
                 DDUtils.moveTowardNearest(map, this, getTileX(), getTileY(), characters);
-                return getName() + " moves closer.......";
+                return results + getName() + " moves closer.......";
             }
         }
     }
 
-    private String attack(Attack attack, PC pc) {
+    private String attack(Attack attack, List<PC> characters) {
 
-        String result = getName();
+        String result = "";
 
-        int roll = DDUtils.rolld20();
+        for (PC pc : characters) {
+            if (pc.getTileX() == getTileX() && pc.getTileY() == getTileY()) {
+                int roll = DDUtils.rolld20();
 
-        if ((roll + attack.getAttack()) >= pc.getAc()) {
-            result += " " + attack.getName() + " " + pc.getName() + " for " + attack.getDamage();
-            pc.takeDamage(attack.getDamage());
-        } else {
-            result += " attempts to " + attack.getName() + " " + pc.getName() + " and misses.";
+                if ((roll + attack.getAttack()) >= pc.getAc()) {
+                    result += getName() + " " + attack.getName() + "s " + pc.getName() + " for " + attack.getDamage();
+                    result += " (" + roll + " + " + attack.getAttack() + ")\n";
+                    pc.takeDamage(attack.getDamage());
+                } else {
+                    result += getName() + " attempts to " + attack.getName() + " " + pc.getName() + " and misses.\n";
+                }
+            }
         }
 
         return result;

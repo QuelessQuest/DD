@@ -2,7 +2,6 @@ package com.barrypress.dd.core;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.barrypress.dd.core.utility.DDUtils;
 
 import java.util.List;

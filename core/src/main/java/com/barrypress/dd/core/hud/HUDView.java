@@ -21,6 +21,7 @@ public class HUDView {
 
     private AssetManager assetManager;
     private Skin skin;
+    private Skin smallSkin;
     private Stage stage;
     private TextureAtlas spriteSheet;
     private SharedAssets sharedAssets;
@@ -28,12 +29,13 @@ public class HUDView {
     private List<PC> characters;
     private List<Monster> monsters;
 
-    public HUDView(SharedAssets sharedAssets, AssetManager assetManager, TextureAtlas spriteSheet, Skin skin) {
+    public HUDView(SharedAssets sharedAssets, AssetManager assetManager, TextureAtlas spriteSheet) {
         this.assetManager = assetManager;
         this.sharedAssets = sharedAssets;
         characters = sharedAssets.getCharacters();
         monsters = sharedAssets.getMonsters();
-        this.skin = skin;
+        this.skin = sharedAssets.getSkin();
+        this.smallSkin = sharedAssets.getSmallSkin();
         this.spriteSheet = spriteSheet;
     }
 
@@ -143,12 +145,22 @@ public class HUDView {
         nameTable.row();
         nameTable.add(characterInfo).colspan(3).height(ntHeight * .86f);
 
+        Table details = new Table();
+        details.setSkin(skin);
+        details.add("Power/Item Detail").center().height(ntHeight * .14f);
+        details.row();
+        details.add("").height(ntHeight * .05f);
+        details.row();
+        TextArea detailText = new TextArea("", smallSkin);
+        detailText.setPrefRows(7.5f);
+        details.add(detailText);
+
         character.add("").width(cWidth * .02f);
         character.add(nameTable).width(cWidth * .24f).height(height * .28f).top().left();
         character.add("").width(cWidth * .03f);
         character.add(characterSkills).width(cWidth * .435f);
         character.add("").width(cWidth * .035f);
-        character.add("details").top().right().width(cWidth * .24f);
+        character.add(details).top().right().width(cWidth * .24f);
 
         Table monsterPortrait = new Table();
         monsterPortrait.setSkin(skin);
@@ -163,6 +175,10 @@ public class HUDView {
         monsterPortrait.add(monsterAC).width(40f).height(45f).top().left();
         monsterPortrait.add("").width(10f);
         monsterPortrait.add(monsterHP).width(50f).height(45f).top().left();
+
+        sharedAssets.setMonsterPortrait(monsterPortrait);
+        sharedAssets.setMpAC(monsterAC);
+        sharedAssets.setMpHP(monsterHP);
 
         portraits.left().top();
         boolean flag = true;
@@ -214,38 +230,31 @@ public class HUDView {
         monsterTable.row();
         monsterTable.add(sharedAssets.getMonsterTactics()).colspan(6).height(mHeight * .60f).width(mWidth);
         monsterTable.row();
-        monsterTable.add(sharedAssets.getMonsterAttacks()).colspan(6).width(mWidth * .90f).height(mHeight * .30f).left();
+        monsterTable.add(sharedAssets.getMonsterAttacks()).colspan(6).width(mWidth * .90f).expandY().left();
 
         MonsterListener monsterListener = new MonsterListener();
         monsterListener.init(monsters, monsters.get(0), sharedAssets.getmName(), sharedAssets.getmAC(), sharedAssets.getmHP());
         monsters.get(0).setListener(monsterListener);
 
-        TextArea textArea = new TextArea("This is where stuff goes", skin);
-        textArea.setPrefRows(5.5f);
-        Label surges = new Label("Surges Remaining:  0", skin);
-        surges.setAlignment(Align.center);
+        TextArea logArea = new TextArea("", smallSkin);
+        logArea.setPrefRows(7.5f);
+        sharedAssets.setLogArea(logArea);
         rightSide.add(sharedAssets.getmName()).colspan(3).height(height * .06f);
         rightSide.row();
         rightSide.add("").width(rWidth * .13f).height(height * .23f);
-        rightSide.add(monsterTable).width(rWidth * .81f).top().left();
+        rightSide.add(monsterTable).width(rWidth * .81f).height(height * .52f).top().left();
         rightSide.add("").width(rWidth * .06f);
         rightSide.row();
-        rightSide.add("").colspan(3).height(height * .04f);
+        rightSide.add("").colspan(3).height(height * .025f);
         rightSide.row();
-        rightSide.add("").width(rWidth * .13f).height(height * .25f);
-        rightSide.add("state").width(rWidth * .81f).top().left();
-        rightSide.add("").width(rWidth * .04f);
+        Label logLabel = new Label("Log", skin);
+        logLabel.setAlignment(Align.center);
+        rightSide.add(logLabel).colspan(3).height(height * .045f);
         rightSide.row();
-        rightSide.add("").colspan(3).height(height * .04f);
+        rightSide.add("").colspan(3).height(height * .015f);
         rightSide.row();
-        rightSide.add("").width(rWidth * .13f).height(height * .045f);
-        rightSide.add(surges).width(rWidth * .81f).height(height * .045f);
-        rightSide.add("").width(rWidth * .06f);
-        rightSide.row();
-        rightSide.add("").colspan(3).height(height * .04f);
-        rightSide.row();
-        rightSide.add("").width(rWidth * .13f).height(height * .18f);
-        rightSide.add(textArea).width(rWidth * .81f).top().left();
+        rightSide.add("").width(rWidth * .13f).height(height * .22f);
+        rightSide.add(logArea).width(rWidth * .81f).top().left();
         rightSide.add("").width(rWidth * .06f);
         rightSide.row();
         rightSide.add("").colspan(3).height(height * .04f);
@@ -267,7 +276,7 @@ public class HUDView {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
         stage.act();
         stage.draw();
     }

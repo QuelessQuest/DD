@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.barrypress.dd.core.Piece;
 import com.barrypress.dd.core.character.PC;
@@ -23,6 +24,8 @@ public abstract class Monster extends Piece {
 
     private Map<String, String> tactics;
     private List<Attack> attacks;
+
+    private SpriteDrawable portrait;
 
     public Monster() {}
 
@@ -127,5 +130,13 @@ public abstract class Monster extends Piece {
 
     public void setOwner(PC owner) {
         this.owner = owner;
+    }
+
+    public SpriteDrawable getPortrait() {
+        return portrait;
+    }
+
+    public void setPortrait(SpriteDrawable portrait) {
+        this.portrait = portrait;
     }
 }

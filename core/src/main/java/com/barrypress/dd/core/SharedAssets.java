@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.barrypress.dd.core.board.BoardTile;
 import com.barrypress.dd.core.character.PC;
 import com.barrypress.dd.core.monster.Monster;
 
@@ -21,13 +20,17 @@ public class SharedAssets {
     private Label mAC;
     private Label mHP;
     private Label mXP;
+    private Label mpAC;
+    private Label mpHP;
     private Skin skin;
     private Skin smallSkin;
     private float mWidth;
     private Phase phase;
 
     private TextArea monsterTactics;
+    private TextArea logArea;
     private Table monsterAttacks;
+    private Table monsterPortrait;
 
     public SharedAssets(Skin skin, Skin smallSkin) {
         this.smallSkin = smallSkin;
@@ -139,5 +142,37 @@ public class SharedAssets {
 
     public void setPhase(Phase phase) {
         this.phase = phase;
+    }
+
+    public Table getMonsterPortrait() {
+        return monsterPortrait;
+    }
+
+    public void setMonsterPortrait(Table monsterPortrait) {
+        this.monsterPortrait = monsterPortrait;
+    }
+
+    public Label getMpAC() {
+        return mpAC;
+    }
+
+    public void setMpAC(Label mpAC) {
+        this.mpAC = mpAC;
+    }
+
+    public Label getMpHP() {
+        return mpHP;
+    }
+
+    public void setMpHP(Label mpHP) {
+        this.mpHP = mpHP;
+    }
+
+    public TextArea getLogArea() {
+        return logArea;
+    }
+
+    public void setLogArea(TextArea logArea) {
+        this.logArea = logArea;
     }
 }

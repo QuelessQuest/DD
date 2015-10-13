@@ -156,8 +156,8 @@ public class DDUtils {
         me.setTileX(tX);
         me.setTileY(tY);
 
-        me.getSprite().setPosition(x, y);
-        me.getHighlightSprite().setPosition(x, y);
+        me.getSprite().setPosition(x + me.getOffsetX(), y + me.getOffsetY());
+        me.getHighlightSprite().setPosition(x + me.getOffsetX(), y + me.getOffsetY());
     }
 
     public static void moveTowardNearest(TiledMap map, Piece me, int tX, int tY, List<? extends  Piece> pieces) {
@@ -195,8 +195,8 @@ public class DDUtils {
                     me.setTileY(y1 == 0 ? 0 : y1 / 4);
                     float mX = (32 * x1) + (32 * y1);
                     float mY = (16 * y1) - (16 * x1);
-                    me.getSprite().setPosition(mX, mY);
-                    me.getHighlightSprite().setPosition(mX, mY);
+                    me.getSprite().setPosition(mX + me.getOffsetX(), mY + me.getOffsetY());
+                    me.getHighlightSprite().setPosition(mX + me.getOffsetX(), mY + me.getOffsetY());
                     return;
                 }
             }

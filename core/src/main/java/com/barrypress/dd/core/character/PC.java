@@ -27,7 +27,6 @@ public abstract class PC extends Piece {
     private String tag;
 
     private Color color;
-    private Image portrait;
     private Label hpLabel;
     private Label acLabel;
     private Table table;
@@ -334,14 +333,6 @@ public abstract class PC extends Piece {
 
     public void setLevel(Integer level) {
         this.level = level;
-    }
-
-    public Image getPortrait() {
-        return portrait;
-    }
-
-    public void setPortrait(Image portrait) {
-        this.portrait = portrait;
     }
 
     public String getTag() {
