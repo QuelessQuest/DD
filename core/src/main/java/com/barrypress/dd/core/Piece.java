@@ -3,7 +3,6 @@ package com.barrypress.dd.core;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.barrypress.dd.core.board.BoardTile;
 import com.barrypress.dd.core.utility.DDUtils;
 
 import java.util.List;
@@ -31,30 +30,12 @@ public abstract class Piece {
         highlighted = false;
     }
 
-    // TODO - Is it a valid cell??
-    public void move(TiledMap map, Piece piece, List<Piece> pieces) {
-
-        int x = piece.getCellX();
-        int y = piece.getCellY();
-
-        for (int x1 = x - 1; x1 <= x + 1; x1++) {
-            for (int y1 = y - 1; y1 <= y + 1; y1++) {
-                if (x1 == x && y1 == y) continue;
-                if (DDUtils.isAvailable(pieces, x1, y1)) {
-                    setCellX(x1);
-                    setCellY(y1);
-                    return;
-                }
-            }
-        }
+    public Piece getNearestOnTile(TiledMap map, List<? extends Piece> pieces) {
+        return DDUtils.getNearestOnTile(map, getTileX(), getTileY(), getCellX(), getCellY(), pieces);
     }
 
-    public Piece getNearestOnTile(List<? extends Piece> pieces) {
-        return DDUtils.getNearestOnTile(getTileX(), getTileY(), getCellX(), getCellY(), pieces);
-    }
-
-    public Piece getNearestWithinXTiles(int distance, List<? extends Piece> pieces) {
-        return DDUtils.getNearestWithinXTiles(distance, getTileX(), getTileY(), pieces);
+    public Piece getNearestWithinXTiles(TiledMap map, int distance, List<? extends Piece> pieces) {
+        return DDUtils.getNearestWithinXTiles(map, distance, getTileX(), getTileY(), pieces);
     }
 
     public int getCellX() {

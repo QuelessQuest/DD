@@ -4,15 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.barrypress.dd.core.Piece;
-import com.barrypress.dd.core.board.Tile;
 import com.barrypress.dd.core.character.PC;
 import com.barrypress.dd.core.utility.DDUtils;
 import org.apache.commons.collections4.ListUtils;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class RatSwarm extends Monster {
 
@@ -39,14 +35,14 @@ public class RatSwarm extends Monster {
 
         List<Piece> allObjects = ListUtils.union(characters, monsters);
 
-        PC nearest = (PC) getNearestOnTile(characters);
+        PC nearest = (PC) getNearestOnTile(map, characters);
         if (nearest != null) {
-            move(map, nearest, allObjects);
+            DDUtils.move(map, this, nearest, allObjects);
             return attack(getAttacks().get(0), nearest);
         } else {
-            nearest = (PC) getNearestWithinXTiles(1, characters);
+            nearest = (PC) getNearestWithinXTiles(map, 1, characters);
             if (nearest != null) {
-                move(map, nearest, allObjects);
+                DDUtils.move(map, this, nearest, allObjects);
                 return attack(getAttacks().get(0), nearest);
             } else {
                 DDUtils.moveTowardNearest(map, this, getTileX(), getTileY(), characters);
