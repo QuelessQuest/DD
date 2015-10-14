@@ -40,8 +40,10 @@ public class RatSwarm extends Monster {
 
         PC nearest = (PC) getNearestOnTile(map, characters);
         if (nearest != null) {
-            DDUtils.move(map, this, nearest, allObjects);
-            results += getName() + " moves next to " + nearest.getName() + "\n";
+            if (!DDUtils.nextTo(this, nearest)) {
+                DDUtils.move(map, this, nearest, allObjects);
+                results += getName() + " moves next to " + nearest.getName() + "\n";
+            }
             return results + attack(getAttacks().get(0), characters);
         } else {
             nearest = (PC) getNearestWithinXTiles(map, 1, characters);

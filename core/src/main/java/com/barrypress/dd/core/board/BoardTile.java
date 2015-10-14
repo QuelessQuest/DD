@@ -27,9 +27,9 @@ public class BoardTile {
     private Map<Integer, Map<Integer, Tile>> tiles;
 
     @SuppressWarnings("unchecked")
-    public BoardTile(TiledMap map) {
+    public BoardTile(Map<Integer, Map<Integer, Tile>> tileInfo) {
 
-        tiles = (Map<Integer, Map<Integer, Tile>>) map.getProperties().get("tileInfo");
+        tiles = tileInfo;
 
         try {
             FileInputStream fis = new FileInputStream(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/board/assets/tiles.json").file());

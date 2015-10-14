@@ -103,7 +103,6 @@ public class DDUtils {
 
         distance -= 1;
 
-        // N
         if (tileContains(tX, tY + 1, pieces)) {
             return getNearestOnTile(map, tX, tY + 1, pieces);
         } else if (tileContains(tX + 1, tY, pieces)) {
@@ -174,6 +173,17 @@ public class DDUtils {
 
         if (Math.abs(xShift) <= Math.abs(yShift)) moveTo(map, me, me.getTileX() + xShift, me.getTileY());
         else moveTo(map, me, me.getTileX(), me.getTileY() + yShift);
+    }
+
+    public static boolean nextTo(Piece me, Piece them) {
+
+        if (me.getCellX() == them.getCellX() - 1 || me.getCellX() == them.getCellX() + 1) {
+            if (me.getCellY() == them.getCellY() - 1 || me.getCellY() == them.getCellY() + 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void move(TiledMap map, Piece me, Piece them, List<Piece> pieces) {

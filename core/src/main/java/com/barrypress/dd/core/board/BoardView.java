@@ -74,10 +74,13 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
         tileInfo = new HashMap<>();
 
         map = new TiledMap();
+        sharedAssets.setMap(map);
         MapLayers layers = map.getLayers();
         map.getProperties().put("tileInfo", tileInfo);
 
-        tiles = new BoardTile(map);
+        tiles = new BoardTile(tileInfo);
+        map.getProperties().put("tiles", tiles);
+
         shapeRenderer = new ShapeRenderer();
 
         TiledMapTileLayer layer = new TiledMapTileLayer(100, 100, 64, 32);
@@ -212,9 +215,6 @@ public class BoardView extends ApplicationAdapter implements InputProcessor {
                     if (piece.getCellX() == x && piece.getCellY() == y) {
                         piece.setHighlighted(true);
                         piece.getListener().clicked(inputEvent, x, y);
-                        if (piece instanceof PC) {
-                            tiles.highlightTiles(allObjects, layer, x, y, 3);
-                        }
                         if (piece instanceof Monster) {
                             sharedAssets.getmName().setText(piece.getName());
                             sharedAssets.getmAC().setText(piece.getAc().toString());

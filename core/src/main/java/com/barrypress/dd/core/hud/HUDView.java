@@ -191,7 +191,7 @@ public class HUDView {
                 portraits.add(pc.getTable()).colspan(2).bottom().left();
             }
             PCListener pcListener = new PCListener();
-            pcListener.init(characters, pc, name, labelAC, labelHP, labelSPD, labelSRG);
+            pcListener.init(sharedAssets, characters, pc, name, labelAC, labelHP, labelSPD, labelSRG);
             pc.setListener(pcListener);
             pc.getTable().addListener(pc.getListener());
             portraits.row();

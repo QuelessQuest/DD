@@ -1,9 +1,11 @@
 package com.barrypress.dd.core;
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.barrypress.dd.core.board.BoardTile;
 import com.barrypress.dd.core.character.PC;
 import com.barrypress.dd.core.monster.Monster;
 
@@ -26,6 +28,7 @@ public class SharedAssets {
     private Skin smallSkin;
     private float mWidth;
     private Phase phase;
+    private TiledMap map;
 
     private TextArea monsterTactics;
     private TextArea logArea;
@@ -174,5 +177,13 @@ public class SharedAssets {
 
     public void setLogArea(TextArea logArea) {
         this.logArea = logArea;
+    }
+
+    public TiledMap getMap() {
+        return map;
+    }
+
+    public void setMap(TiledMap map) {
+        this.map = map;
     }
 }

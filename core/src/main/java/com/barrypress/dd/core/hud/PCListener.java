@@ -1,11 +1,15 @@
 package com.barrypress.dd.core.hud;
 
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.barrypress.dd.core.Piece;
 import com.barrypress.dd.core.PieceListener;
+import com.barrypress.dd.core.SharedAssets;
+import com.barrypress.dd.core.board.BoardTile;
 import com.barrypress.dd.core.character.PC;
+import org.apache.commons.collections4.ListUtils;
 
 import java.util.List;
 
@@ -13,11 +17,13 @@ public class PCListener extends PieceListener {
 
     private Label spd;
     private Label srg;
+    private SharedAssets sharedAssets;
 
     public PCListener() {}
 
-    public void init(List<PC> characters, Piece pc, Label name, Label ac, Label hp, Label spd, Label srg) {
+    public void init(SharedAssets sharedAssets, List<PC> characters, Piece pc, Label name, Label ac, Label hp, Label spd, Label srg) {
         super.init(characters, pc, name, ac, hp);
+        this.sharedAssets = sharedAssets;
         this.spd = spd;
         this.srg = srg;
     }
@@ -34,6 +40,9 @@ public class PCListener extends PieceListener {
         spd.setText(pc.getSpeed().toString());
         srg.setText(pc.getSurge().toString());
         pc.setHighlighted(true);
+        BoardTile boardTile = (BoardTile) sharedAssets.getMap().getProperties().get("tiles");
+        TiledMapTileLayer layer = (TiledMapTileLayer) sharedAssets.getMap().getLayers().get("tiles");
+        boardTile.highlightTiles(ListUtils.union(sharedAssets.getCharacters(), sharedAssets.getMonsters()), layer, (int) x, (int) y, pc.getSpeed());
     }
 
     @Override
