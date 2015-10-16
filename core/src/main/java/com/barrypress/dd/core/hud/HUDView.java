@@ -17,14 +17,14 @@ import com.barrypress.dd.core.monster.MonsterListener;
 
 import java.util.List;
 
-public class HUDView {
+public class HUDView extends FlatScreen {
 
     private AssetManager assetManager;
     private Skin skin;
     private Skin smallSkin;
-    private Stage stage;
     private TextureAtlas spriteSheet;
     private SharedAssets sharedAssets;
+    private SpriteBatch batch;
 
     private List<PC> characters;
     private List<Monster> monsters;
@@ -46,7 +46,7 @@ public class HUDView {
         float height = (float) Gdx.graphics.getHeight();
         float width  = (float) Gdx.graphics.getWidth();
 
-        SpriteBatch batch = new SpriteBatch();
+        batch = new SpriteBatch();
 
         NinePatch background = new NinePatch(spriteSheet.findRegion("background"), 10, 10, 10, 10);
         skin.add("background", background);
@@ -54,7 +54,7 @@ public class HUDView {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        stage = new Stage(new StretchViewport((float) Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight()), batch);
+        setStage(new Stage(new StretchViewport((float) Gdx.graphics.getWidth(), (float) Gdx.graphics.getHeight()), batch));
 
         Sprite mainGame = new Sprite(new Texture(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/maingame.png")));
 
@@ -268,19 +268,21 @@ public class HUDView {
         mainTable.add(leftSide).top().left();
         mainTable.add(rightSide).width(width * .21f).top().left();
 
-        stage.addActor(mainTable);
+        getStage().addActor(mainTable);
     }
 
     public void render() {
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        stage.getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        getStage().getViewport().update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         //stage.setDebugAll(true);
-        stage.act();
-        stage.draw();
+        getStage().act();
+        getStage().draw();
     }
 
-    public Stage getStage() { return stage; }
-
+    public void dispose() {
+        batch.dispose();
+        getStage().dispose();
+    }
 }

@@ -9,23 +9,28 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.barrypress.dd.core.board.BoardView;
 import com.barrypress.dd.core.character.*;
 import com.barrypress.dd.core.hud.HUDView;
+import com.barrypress.dd.core.hud.MainMenu;
 import com.barrypress.dd.core.monster.RatSwarm;
 
 public class DD implements ApplicationListener {
 
-    private BoardView boardView;
-	private HUDView hudView;
+    private AssetManager assetManager;
+    private MainMenu mainMenu;
+    private Skin skin;
+    private Skin smallSkin;
+    private TextureAtlas spriteSheet;
+    private SharedAssets sharedAssets;
 
 	@Override
 	public void create () {
 
-        AssetManager assetManager = new AssetManager();
+        assetManager = new AssetManager();
         assetManager.load("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt", TextureAtlas.class);
         assetManager.finishLoading();
-        TextureAtlas spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
-        Skin skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
-        Skin smallSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/small.json"));
-        SharedAssets sharedAssets = new SharedAssets(skin, smallSkin);
+        spriteSheet = assetManager.get("core/src/main/java/com/barrypress/dd/core/hud/assets/spritesheet.txt");
+        skin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/uiskin.json"));
+        smallSkin = new Skin(Gdx.files.internal("core/src/main/java/com/barrypress/dd/core/hud/assets/small.json"));
+        sharedAssets = new SharedAssets(skin, smallSkin);
 
         Thorgrim thorgrim = new Thorgrim(spriteSheet, skin);
         Allisa allisa = new Allisa(spriteSheet, skin);
@@ -40,17 +45,21 @@ public class DD implements ApplicationListener {
         sharedAssets.getCharacters().add(allisa);
         sharedAssets.getCharacters().add(kat);
 
-        boardView = new BoardView(sharedAssets);
-        boardView.init();
+        mainMenu = new MainMenu(sharedAssets, spriteSheet);
+        mainMenu.init();
 
-        hudView = new HUDView(sharedAssets, assetManager, spriteSheet);
-        hudView.init();
+        sharedAssets.setScreen(mainMenu);
 
-        InputMultiplexer inputMultiplexer = new InputMultiplexer();
-        inputMultiplexer.addProcessor(hudView.getStage());
-        inputMultiplexer.addProcessor(boardView);
+        sharedAssets.setBoardView(new BoardView(sharedAssets));
+        sharedAssets.getBoardView().init();
 
-        Gdx.input.setInputProcessor(inputMultiplexer);
+        sharedAssets.setHudView(new HUDView(sharedAssets, assetManager, spriteSheet));
+        sharedAssets.getHudView().init();
+
+        sharedAssets.setInputMultiplexer(new InputMultiplexer());
+        sharedAssets.getInputMultiplexer().addProcessor(mainMenu.getStage());
+
+        Gdx.input.setInputProcessor(sharedAssets.getInputMultiplexer());
     }
 
 	@Override
@@ -59,9 +68,8 @@ public class DD implements ApplicationListener {
 
 	@Override
 	public void render () {
-
-        boardView.render();
-        hudView.render();
+        if (sharedAssets.isBoardViewVisible()) sharedAssets.getBoardView().render();
+        sharedAssets.getScreen().render();
 	}
 
 	@Override
@@ -74,5 +82,10 @@ public class DD implements ApplicationListener {
 
 	@Override
 	public void dispose () {
+        mainMenu.dispose();
+        skin.dispose();
+        smallSkin.dispose();
+        spriteSheet.dispose();
+        assetManager.dispose();
 	}
 }

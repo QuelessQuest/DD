@@ -1,12 +1,16 @@
 package com.barrypress.dd.core;
 
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.barrypress.dd.core.board.BoardTile;
+import com.barrypress.dd.core.board.BoardView;
 import com.barrypress.dd.core.character.PC;
+import com.barrypress.dd.core.hud.FlatScreen;
+import com.barrypress.dd.core.hud.HUDView;
 import com.barrypress.dd.core.monster.Monster;
 
 import java.util.ArrayList;
@@ -30,6 +34,11 @@ public class SharedAssets {
     private Phase phase;
     private TiledMap map;
 
+    private boolean boardViewVisible;
+    private InputMultiplexer inputMultiplexer;
+    private BoardView boardView;
+    private HUDView hudView;
+    private FlatScreen screen;
     private TextArea monsterTactics;
     private TextArea logArea;
     private Table monsterAttacks;
@@ -45,6 +54,8 @@ public class SharedAssets {
         mHP = new Label("0", skin);
         mXP = new Label("0", skin);
         phase = Phase.HERO;
+        boardView = null;
+        boardViewVisible = false;
 
         monsterTactics = new TextArea("Text Area", smallSkin);
         monsterAttacks = new Table();
@@ -185,5 +196,45 @@ public class SharedAssets {
 
     public void setMap(TiledMap map) {
         this.map = map;
+    }
+
+    public FlatScreen getScreen() {
+        return screen;
+    }
+
+    public void setScreen(FlatScreen screen) {
+        this.screen = screen;
+    }
+
+    public HUDView getHudView() {
+        return hudView;
+    }
+
+    public void setHudView(HUDView hudView) {
+        this.hudView = hudView;
+    }
+
+    public InputMultiplexer getInputMultiplexer() {
+        return inputMultiplexer;
+    }
+
+    public void setInputMultiplexer(InputMultiplexer inputMultiplexer) {
+        this.inputMultiplexer = inputMultiplexer;
+    }
+
+    public BoardView getBoardView() {
+        return boardView;
+    }
+
+    public void setBoardView(BoardView boardView) {
+        this.boardView = boardView;
+    }
+
+    public boolean isBoardViewVisible() {
+        return boardViewVisible;
+    }
+
+    public void setBoardViewVisible(boolean boardViewVisible) {
+        this.boardViewVisible = boardViewVisible;
     }
 }
